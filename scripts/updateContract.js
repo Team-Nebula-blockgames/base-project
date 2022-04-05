@@ -7,7 +7,7 @@ dotenv.config();
 async function updateClientContract() {
   try {
     let contractName = process.env.contractNames;
-    await deleteFiles();
+    await deleteExistingContractABI();
     contractName.split(",").forEach(async (element) => {
       console.log(element);
       await asyncfs.copyFile(
@@ -24,7 +24,7 @@ async function updateClientContract() {
   }
 }
 
-async function deleteFiles() {
+async function deleteExistingContractABI() {
   const directory = "client/contracts";
   await asyncfs.rmdir(directory, {
     recursive: true,

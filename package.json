@@ -6,8 +6,8 @@
   "scripts": {
     "test": "npx hardhat test",
     "compile": "npx hardhat compile && node scripts/updateContract.js",
-    "publish": "npx hardhat run",
-    "publish-rinkeby": "npx hardhat run deploy.js --network rinkeby"
+    "deploy": "npx hardhat run scripts/deploy.js --network localhost",
+    "deploy-rinkeby": "npx hardhat run deploy.js --network rinkeby"
   },
   "author": "",
   "license": "ISC",
@@ -32,5 +32,8 @@
     "prettier-plugin-solidity": "^1.0.0-beta.13",
     "solhint": "^3.3.7",
     "solidity-coverage": "^0.7.20"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.5.0"
   }
 }

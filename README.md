@@ -11,22 +11,11 @@ Try running some of the following tasks:
 The client folder is the folder for the react frontend app calling the contracts. The client/contracts directory contains the compiled contracts for the react front end application.
 
 ```shell
-npx hardhat accounts
-npx hardhat compile
-npx hardhat clean
-npx hardhat test
-npx hardhat node
-npx hardhat help
-REPORT_GAS=true npx hardhat test
-npx hardhat coverage
-npx hardhat run scripts/deploy.js
-node scripts/deploy.js
-npx eslint '**/*.js'
-npx eslint '**/*.js' --fix
-npx prettier '**/*.{json,sol,md}' --check
-npx prettier '**/*.{json,sol,md}' --write
-npx solhint 'contracts/**/*.sol'
-npx solhint 'contracts/**/*.sol' --fix
+npm run node (to start localhost testnet)
+npm run deploy (to run deploy script on localhost)
+npm run compile (to complie contracts and copy contract ABI to the client/contracts folder )
+npm run deploy-rinkeby (to run deploy script on rinkeby testnet)
+npm test (to run contract test)
 ```
 
 # Etherscan verification
