@@ -6,7 +6,7 @@ dotenv.config();
 
 async function updateClientContract() {
   try {
-    let contractName = process.env.contractNames;
+    let contractName = process.env.CONTRACT_NAMES;
     await deleteExistingContractABI();
     contractName.split(",").forEach(async (element) => {
       console.log(element);
