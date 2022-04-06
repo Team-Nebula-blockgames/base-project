@@ -5,7 +5,7 @@ const { ContractFactory } = require("ethers");
 
 let accounts;
 
-describe("Token", function () {
+describe("MultiTransferTokenEqual", function () {
 
     beforeEach(async() => {
         accounts = await ethers.getSigners();
@@ -16,7 +16,7 @@ describe("Token", function () {
         owner = accounts[0].address;
     });
 
-    it("Should deploy token contract", async function() {
+    it("Should deploy AccessControl contract", async function() {
         expect(await nestCoin.deployed(), "Token contract not deployed");
     });
 
