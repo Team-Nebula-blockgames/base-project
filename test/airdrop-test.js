@@ -17,6 +17,8 @@ describe("MultiTransferTokenEqual", function () {
         multiTransferTokenEqual = await MultiTransferTokenEqual.deploy();
         await nestCoin.deployed();
         await multiTransferTokenEqual.deployed();
+        await nestCoin.mint(1000);
+        await nestCoin.approve(multiTransferTokenEqual.address, 1000);
         owner = accounts[0].address;
     });
 
@@ -29,7 +31,7 @@ describe("MultiTransferTokenEqual", function () {
     });
 
     it("Admin should be able to perform a batch transfer", async function () {
-        let amount = 0;
+        let amount = 10;
         let _addresses = [accounts[2].address, accounts[3].address, accounts[4].address];
         let _token = nestCoin.address;
         let contractTokenBalance = (await nestCoin.balanceOf(owner)).toNumber();
