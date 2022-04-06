@@ -28,7 +28,7 @@ describe("MultiTransferTokenEqual", function () {
         expect(await multiTransferTokenEqual.deployed(), "MultiTransferTokenEqual not deployed");
     });
 
-    it("Should perform a batch transfer", async function () {
+    it("Admin should be able to perform a batch transfer", async function () {
         let amount = 0;
         let _addresses = [accounts[2].address, accounts[3].address, accounts[4].address];
         let _token = nestCoin.address;

@@ -9,7 +9,7 @@ describe("Token", function () {
 
     beforeEach(async() => {
         accounts = await ethers.getSigners();
-        contractFactory = await ethers.getContractFactory("MultiTransferTokenEqual");
+        contractFactory = await ethers.getContractFactory("Nestcoin");
         Nestcoin = await ethers.getContractFactory("Nestcoin");
         nestCoin = await Nestcoin.deploy();
         await nestCoin.deployed();
@@ -20,7 +20,7 @@ describe("Token", function () {
         expect(await nestCoin.deployed(), "Token contract not deployed");
     });
 
-    it("Owner should be able to mint tokens", async function() {
+    it("Admin should be able to mint tokens", async function() {
         let amount = 10;
         expect(amount).to.be.greaterThan(0, "You cannot mint zero tokens!");
         console.log("Minting...");
