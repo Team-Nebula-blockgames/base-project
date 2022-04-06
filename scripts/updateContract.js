@@ -6,17 +6,15 @@ dotenv.config();
 
 async function updateClientContract() {
   try {
-    let contractName = process.env.contractNames;
-    await deleteFiles();
+    let contractName = process.env.CONTRACT_NAMES;
+    await deleteExistingContractABI();
     contractName.split(",").forEach(async (element) => {
-      console.log(element);
+      console.log(`copying ${element}.sol to client/contracts 👍`);
       await asyncfs.copyFile(
         `artifacts/contracts/${element}.sol/${element}.json`,
         `client/contracts/${element}.json`
       );
     });
-
-    console.log("Solidity contracts was successfully copied to client.");
     process.exit(0);
   } catch (e) {
     console.log(e);
@@ -24,9 +22,9 @@ async function updateClientContract() {
   }
 }
 
-async function deleteFiles() {
+async function deleteExistingContractABI() {
   const directory = "client/contracts";
-  await asyncfs.rmdir(directory, {
+  await asyncfs.rm(directory, {
     recursive: true,
   });
 
