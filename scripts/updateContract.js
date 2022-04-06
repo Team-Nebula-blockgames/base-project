@@ -26,7 +26,7 @@ async function updateClientContract() {
 
 async function deleteExistingContractABI() {
   const directory = "client/contracts";
-  await asyncfs.rmdir(directory, {
+  await asyncfs.rm(directory, {
     recursive: true,
   });
 
