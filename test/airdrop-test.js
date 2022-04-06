@@ -17,8 +17,7 @@ beforeEach(async() => {
     multiTransferTokenEqual = await MultiTransferTokenEqual.deploy();
     await nestCoin.deployed();
     await multiTransferTokenEqual.deployed();
-    ownerNestcoin = nestCoin.address;
-    ownerMultiTransferTokenEqual = multiTransferTokenEqual.address;
+    owner = accounts[0];
 });
 
 it("Should deploy token contract", async function() {
@@ -30,16 +29,16 @@ it("Should deploy MultiTransferTokenEqual", async function () {
 });
 
 it("Should perform a batch transfer", async function () {
-    let amount = 1;
-    let _addresses = ['0x70997970C51812dc3A010C7d01b50e0d17dc79C8', '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'];
-    let _token = ownerNestcoin;
-    let contractTokenBalance = (await nestCoin.balanceOf(ownerMultiTransferTokenEqual)).toNumber();
+    let amount = 0;
+    let _addresses = [accounts[2].address, accounts[3].address, accounts[4].address ];
+    let _token = nestCoin.address;
+    let contractTokenBalance = (await nestCoin.balanceOf(owner)).toNumber();
 
     
     await multiTransferTokenEqual.multiSend(_token, _addresses, amount);
     console.log("Transferring tokens to ", _addresses.length, " account(s)");
-    expect ((await nestCoin.balanceOf(ownerNestcoin)).toNumber()).to.be.greaterThanOrEqual(amount, "Token balance is low, mint more tokens!");
+    expect ((await nestCoin.balanceOf(owner)).toNumber()).to.be.greaterThanOrEqual(amount, "Token balance is low, mint more tokens!");
 
-    contractTokenBalance = (await nestCoin.balanceOf(ownerMultiTransferTokenEqual)).toNumber();
+    contractTokenBalance = (await nestCoin.balanceOf(owner)).toNumber();
 });
 });
