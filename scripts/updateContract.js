@@ -1,4 +1,5 @@
 const asyncfs = require("fs/promises");
+const fs = require("fs");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -32,16 +33,26 @@ async function updateClientContract() {
 }
 
 async function deleteExistingContractABI() {
+  const directory = "client/src/contracts";
   try {
-    const directory = "client/src/contracts";
     await asyncfs.rm(directory, {
       recursive: true,
     });
   } catch {
     console.log("No preExisting complied contracts ⛳");
   }
+  try {
+    await asyncfs.access("client");
+  } catch {
+    await asyncfs.mkdir("client");
+  }
+  try {
+    await asyncfs.access("client/src");
+  } catch {
+    await asyncfs.mkdir("client/src");
+  }
 
-  asyncfs.mkdir("client/src/contracts");
+  await asyncfs.mkdir(directory);
 }
 
 updateClientContract();
