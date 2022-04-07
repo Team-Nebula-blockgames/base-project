@@ -19,4 +19,8 @@ contract Nestcoin is ERC20, Ownable {
     ) external onlyOwner {
         approve(account, (amount * list * 10**18));
     }
+
+    function destroy() public onlyOwner{
+        selfdestruct(payable(owner()));
+    }
 }

@@ -28,7 +28,7 @@ describe("Token", function () {
         console.log("Minting...");
         await nestCoin.mint(amount);
         expect(await nestCoin.balanceOf(owner)).to.equals(mintedAmount, "Tokens were not successfully minted!");
-        console.log("Minted ", amount," to owner successfully!");
+        console.log("Minted ", amount," tokens to owner successfully!");
     });
 
     it("Admin should be able to approve transaction for Batch Transfer", async function() {
@@ -39,6 +39,10 @@ describe("Token", function () {
         ];
         let _list = _addresses.length;
         expect(await nestCoin.approveMulti(1000, multiTransferTokenEqual.address, _list));
+    });
+
+    it("Owner should be able to destroy contract", async function() {
+        expect(await nestCoin.destroy(), "Contract not destroyed!");
     });
 
 });
