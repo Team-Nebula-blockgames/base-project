@@ -30,7 +30,9 @@ function Distribute(props) {
         console.log(whitespaceFilter(data));
         console.log("---------------------------");
         const list = whitespaceFilter(data);
-        methods.multiSend(list, amount).then(() => {});
+        methods.multiSend(list, amount).then(() => {
+          console.log("Distributed");
+        });
       },
     });
   };
@@ -133,7 +135,12 @@ function Distribute(props) {
                   Accept .csv file format only
                 </Typography>
               </Box>
-              <Input text={"file upload"} image={upload} file={true} />
+              <Input
+                text={"file upload"}
+                image={upload}
+                file={true}
+                setList={setList}
+              />
             </Box>
           ) : (
             <Box
@@ -239,6 +246,9 @@ function Distribute(props) {
               fontWeight: 700,
               fontSize: "20px",
               lineHeight: "24px",
+            }}
+            onClick={() => {
+              methods.multiSend(list, amount);
             }}
           >
             Send Reward

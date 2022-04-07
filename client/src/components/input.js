@@ -3,7 +3,7 @@ import { useCSVReader } from "react-papaparse";
 import whitespaceFilter from "../utils/whitespaceFilter";
 
 function Input(props) {
-  const { image, file, setAmount } = props;
+  const { image, file, setAmount, setList } = props;
 
   const { CSVReader } = useCSVReader();
 
@@ -14,6 +14,7 @@ function Input(props) {
         console.log("---------------------------");
         console.log(whitespaceFilter(data));
         console.log("---------------------------");
+        setList(whitespaceFilter(data));
       }}
     >
       {({ getRootProps, acceptedFile }) => (

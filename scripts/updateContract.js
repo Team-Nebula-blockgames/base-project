@@ -12,7 +12,7 @@ async function updateClientContract() {
       console.log(`copying ${element}.sol to client/contracts 👍`);
       await asyncfs.copyFile(
         `artifacts/contracts/${element}.sol/${element}.json`,
-        `client/contracts/${element}.json`
+        `client/src/contracts/${element}.json`
       );
     });
     process.exit(0);
@@ -23,12 +23,12 @@ async function updateClientContract() {
 }
 
 async function deleteExistingContractABI() {
-  const directory = "client/contracts";
+  const directory = "client/src/contracts";
   await asyncfs.rm(directory, {
     recursive: true,
   });
 
-  asyncfs.mkdir("client/contracts");
+  asyncfs.mkdir("client/src/contracts");
 }
 
 updateClientContract();
