@@ -77,7 +77,7 @@ function Admin(props) {
             lineHeight: "24px",
           }}
           onClick={() => {
-            methods.mint(amount).then(async () => {
+            methods.mint(amount.toString()).then(async () => {
               const bal = (await getBalance(address)).toString();
               setTokens(bal);
             });

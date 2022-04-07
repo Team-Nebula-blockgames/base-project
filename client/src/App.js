@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import getEthers from "./getEthers";
 import { Contract, utils } from "ethers";
-import Token from "./contracts/Token.sol/Nestcoin.json";
-import Distributor from "./contracts/Airdrop.sol/MultiTransferTokenEqual.json";
+import Token from "./contracts/Nestcoin.sol/Nestcoin.json";
+import Distributor from "./contracts/MultiTransferTokenEqual.sol/MultiTransferTokenEqual.json";
 import Control from "./contracts/AccessControl.sol/AccessControl.json";
 import "./App.css";
 import Box from "@mui/material/Box";
@@ -42,7 +42,7 @@ function App() {
         provider
       );
       const controlContract = new Contract(
-        "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+        "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
         Control.abi,
         provider
       );
@@ -84,7 +84,13 @@ function App() {
           />
         )}
       </Box>
-      {modal && <AddAdmin setModal={setModal} methods={controlMethods} />}
+      {modal && (
+        <AddAdmin
+          setModal={setModal}
+          tokenMethod={tokenMethods}
+          distributeMethod={distributorMethods}
+        />
+      )}
     </Box>
   );
 }

@@ -30,9 +30,15 @@ function Distribute(props) {
         console.log(whitespaceFilter(data));
         console.log("---------------------------");
         const list = whitespaceFilter(data);
-        methods.multiSend(list, amount).then(() => {
-          console.log("Distributed");
-        });
+        methods
+          .multiSend(
+            "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+            list,
+            amount.toString()
+          )
+          .then(() => {
+            console.log("Distributed");
+          });
       },
     });
   };
@@ -185,7 +191,7 @@ function Distribute(props) {
                   input a list of comma(,) seperated Addresses
                 </Typography>
               </Box>
-              <Input2 />
+              <Input2 setText={setText} />
             </Box>
           )}
           <Box
@@ -238,6 +244,7 @@ function Distribute(props) {
             />
           </Box>
           <Button
+            variant="contained"
             sx={{
               width: "209px",
               height: "60px",
@@ -248,7 +255,17 @@ function Distribute(props) {
               lineHeight: "24px",
             }}
             onClick={() => {
-              methods.multiSend(list, amount);
+              csv
+                ? methods
+                    .multiSend(
+                      "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+                      list,
+                      amount.toString()
+                    )
+                    .then(() => {
+                      console.log("Done");
+                    })
+                : handleSubmit();
             }}
           >
             Send Reward

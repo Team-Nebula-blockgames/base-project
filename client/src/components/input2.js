@@ -1,10 +1,15 @@
 import React from "react";
 
 function Input2(props) {
-  const { text, image, file } = props;
+  const { setText } = props;
   return (
     <div style={style.outer}>
-      <input type="text" placeholder="paste Addresses" style={style.input} />
+      <input
+        type="text"
+        placeholder="paste Addresses"
+        style={style.input}
+        onChange={(e) => setText(e.target.value)}
+      />
     </div>
   );
 }
