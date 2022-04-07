@@ -31,9 +31,9 @@ contract MultiTransferTokenEqual is Ownable {
             token.balanceOf(msg.sender) >= _amountSum,
             "Token Balance is Low, mint more tokens to send"
         );
-        token.safeTransferFrom(msg.sender, address(this), _amountSum);
+        token.safeTransferFrom(msg.sender, address(this), _amountSum * 10**18);
         for (uint8 i; i < _addresses.length; i++) {
-            token.safeTransfer(_addresses[i], _amount);
+            token.safeTransfer(_addresses[i], _amount * 10**18);
         }
     }
 }

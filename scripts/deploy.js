@@ -10,14 +10,17 @@ async function main() {
   const multiTransferTokenEqualFactory = await ethers.getContractFactory(
     "MultiTransferTokenEqual"
   );
+  const AccessControl = await ethers.getContractFactory("AccessControl");
   const token = await Token.deploy();
   const multiTransferTokenEqual = await multiTransferTokenEqualFactory.deploy();
+  const accessControl = await AccessControl.deploy();
 
   console.log("Token address:", token.address);
   console.log(
     "MultiTransferTokenEqual address:",
     multiTransferTokenEqual.address
   );
+  console.log("Acces Control Addresss:", accessControl.address);
 }
 
 main()
