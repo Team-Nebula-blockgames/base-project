@@ -18,7 +18,7 @@ describe("MultiTransferTokenEqual", function () {
         await nestCoin.deployed();
         await multiTransferTokenEqual.deployed();
         await nestCoin.mint(1000);
-        await nestCoin.approve(multiTransferTokenEqual.address, 1000);
+        await nestCoin.approve(multiTransferTokenEqual.address, 10000);
         owner = accounts[0].address;
     });
 
@@ -31,13 +31,16 @@ describe("MultiTransferTokenEqual", function () {
     });
 
     it("Admin should be able to perform a batch transfer", async function () {
-        let amount = 10;
+        let amount = 1;
         let _addresses = [accounts[2].address, accounts[3].address, accounts[4].address];
         let _token = nestCoin.address;
         let contractTokenBalance = (await nestCoin.balanceOf(owner)).toNumber();
         
+        expect (contractTokenBalance).to.be.greaterThanOrEqual(amount, "Token balance is low, mint more tokens!");
         await multiTransferTokenEqual.multiSend(_token, _addresses, amount);
         console.log("Transferring tokens to ", _addresses.length, " account(s)");
-        expect (contractTokenBalance).to.be.greaterThanOrEqual(amount, "Token balance is low, mint more tokens!");
+        expect(await nestCoin.balanceOf(_addresses[0])).to.equals(amount, "Tokens were not successfully minted to everyone!");
+        expect(await nestCoin.balanceOf(_addresses[1])).to.equals(amount, "Tokens were not successfully minted to everyone!");
+        expect(await nestCoin.balanceOf(_addresses[2])).to.equals(amount, "Tokens were not successfully minted to everyone!");
     });
 });

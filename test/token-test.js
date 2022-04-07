@@ -22,11 +22,9 @@ describe("Token", function () {
 
     it("Admin should be able to mint tokens", async function() {
         let amount = 10;
-        expect(amount).to.be.greaterThan(0, "You cannot mint zero tokens!");
         console.log("Minting...");
         await nestCoin.mint(amount);
-        expect((await nestCoin.balanceOf(owner)).toNumber()).to.be.greaterThanOrEqual(amount, "Tokens were not successfully minted!");
-        
+        expect(await nestCoin.balanceOf(owner)).to.equals(amount, "Tokens were not successfully minted!");
     });
 
 });
