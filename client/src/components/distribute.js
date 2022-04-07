@@ -11,7 +11,7 @@ import { usePapaParse } from "react-papaparse";
 import whitespaceFilter from "../utils/whitespaceFilter";
 
 function Distribute(props) {
-  const { methods } = props;
+  const { tokenMethod, distributorMethod } = props;
   const [csv, setCsv] = useState(true);
   const [amount, setAmount] = useState(0);
   const [text, setText] = useState("");
@@ -24,25 +24,50 @@ function Distribute(props) {
 
     readString(csvString, {
       worker: true,
-      complete: (results) => {
+      complete: async (results) => {
         const data = results.data[0];
         console.log("---------------------------");
         console.log(whitespaceFilter(data));
         console.log("---------------------------");
         const list = whitespaceFilter(data);
-        methods
-          .multiSend(
-            "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-            list,
-            amount.toString()
+        tokenMethod
+          .approveMulti(
+            amount.toString(),
+            "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+            list.length
           )
-          .then(() => {
-            console.log("Distributed");
+          .then((result) => {
+            if (result)
+              distributorMethod
+                .multiSend(
+                  "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+                  list,
+                  amount.toString()
+                )
+                .then(() => console.log("Distributed tokens"));
           });
       },
     });
   };
 
+  const batchSend = async () => {
+    tokenMethod
+      .approveMulti(
+        amount.toString(),
+        "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+        list.length
+      )
+      .then((result) => {
+        if (result)
+          distributorMethod
+            .multiSend(
+              "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+              list,
+              amount.toString()
+            )
+            .then(() => console.log("Distributed tokens"));
+      });
+  };
   return (
     <Box
       sx={{
@@ -255,17 +280,7 @@ function Distribute(props) {
               lineHeight: "24px",
             }}
             onClick={() => {
-              csv
-                ? methods
-                    .multiSend(
-                      "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-                      list,
-                      amount.toString()
-                    )
-                    .then(() => {
-                      console.log("Done");
-                    })
-                : handleSubmit();
+              csv ? batchSend() : handleSubmit();
             }}
           >
             Send Reward

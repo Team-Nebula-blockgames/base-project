@@ -1,13 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import token from "../images/token.svg";
 import Input from "./input";
+import getEthers from "../getEthers";
+import { Contract } from "ethers";
+import Token from "../contracts/Nestcoin.sol/Nestcoin.json";
 
 function Admin(props) {
-  const { methods, getBalance, address, setTokens, tokens } = props;
+  const { methods, setTokens, tokens } = props;
   const [amount, setAmount] = useState(0);
+  const [balance, setBalance] = useState(tokens);
+
+  useEffect(() => {
+    const getData = async () => {
+      const provider = await getEthers();
+      const signer = provider.getSigner();
+      const address = signer.getAddress();
+      const tokenContract = new Contract(
+        "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+        Token.abi,
+        provider
+      );
+
+      tokenContract.balanceOf(address).then((result) => {
+        setBalance(result / 10 ** 18);
+      });
+    };
+
+    getData().then(() => {});
+  }, [tokens]);
 
   return (
     <Box
@@ -30,9 +53,8 @@ function Admin(props) {
           fontWeight: 700,
           fontSize: "20px",
         }}
-        key={tokens}
       >
-        Token Balance: {tokens}
+        Token Balance: {balance}
       </Typography>
       <Box
         sx={{
@@ -77,9 +99,9 @@ function Admin(props) {
             lineHeight: "24px",
           }}
           onClick={() => {
-            methods.mint(amount.toString()).then(async () => {
-              const bal = (await getBalance(address)).toString();
-              setTokens(bal);
+            methods.mint(amount.toString()).then(() => {
+              setBalance(Number(balance) + amount);
+              setTokens(tokens + amount);
             });
           }}
         >
