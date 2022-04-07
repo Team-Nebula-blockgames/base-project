@@ -22,7 +22,7 @@ function Input(props) {
           <div style={style.outer}>
             <p style={style.text}>{acceptedFile && acceptedFile.name}</p>
             <label style={style.imgContainer} {...getRootProps()}>
-              <img alt="image" src={image} style={style.image} />
+              <img alt="an imported item" src={image} style={style.image} />
             </label>
           </div>
         </>
@@ -37,20 +37,10 @@ function Input(props) {
         onChange={(e) => setAmount(Number(e.target.value))}
       />
       <div style={style.imgContainer2}>
-        <img alt="image" src={image} style={style.image} />
+        <img alt="an imported item" src={image} style={style.image} />
       </div>
     </div>
   );
-}
-
-{
-  /* <div style={style.outer}>
-      <p style={style.text}>{text}</p>
-      <label for="file-upload" style={style.imgContainer}>
-        <img alt="image" src={image} style={style.image} />
-      </label>
-      <input id="file-upload" type="file" style={style.input} />
-    </div> */
 }
 
 const style = {

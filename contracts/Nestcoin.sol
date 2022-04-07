@@ -10,4 +10,12 @@ contract Nestcoin is ERC20, Ownable {
     function mint(uint256 amount) public onlyOwner {
         _mint(msg.sender, amount * 10**18);
     }
+
+    function approveMulti(
+        uint256 amount,
+        address account,
+        uint256 list
+    ) external onlyOwner {
+        approve(account, (amount * list * 10**18));
+    }
 }

@@ -21,7 +21,7 @@ function AddAdmin(props) {
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "rgba(128, 128, 128, 0.515)",
-        zIndex: 5,
+        zIndex: 10,
       }}
     >
       <Box
@@ -36,7 +36,6 @@ function AddAdmin(props) {
           background: "#FFFFFF",
           boxShadow: "0px 4px 84px rgba(104, 86, 86, 0.25)",
           borderRadius: "3px",
-          zIndex: 10,
         }}
       >
         <Box
@@ -77,83 +76,54 @@ function AddAdmin(props) {
             onChange={(e) => setAddress(e.target.value)}
           />
           <div style={style.imgContainer2}>
-            <img alt="image" src={scan} style={style.image} />
+            <img alt="Scan Icon" src={scan} style={style.image} />
           </div>
         </div>
         <Box
           sx={{
             width: "464px",
+            heigth: "60px",
             display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            justifyContent: "space-between",
+            marginTop: "42px",
           }}
         >
-          <Typography sx={{ marginBottom: "10px" }}>
-            Transfer contract ownserships
-          </Typography>
-          <Box
+          <Button
+            variant="contained"
             sx={{
-              width: "464px",
-              heigth: "60px",
-              display: "flex",
-              justifyContent: "space-between",
+              width: "222px",
+              height: "60px",
+              background: "#1949D9",
+              borderRadius: "8px",
+              color: "white",
+              fontWeight: 700,
+              fontSize: "20px",
+              lineHeight: "24px",
+            }}
+            onClick={async () => {
+              await tokenMethod.transferOwnership(address);
+              await distributorMethod.transferOwnership(address);
             }}
           >
-            <Button
-              variant="contained"
-              sx={{
-                width: "222px",
-                height: "40px",
-                background: "#1949D9",
-                borderRadius: "8px",
-                color: "white",
-                fontWeight: 700,
-                fontSize: "20px",
-                lineHeight: "24px",
-              }}
-              onClick={async () => {
-                await tokenMethod.transferOwnership(address);
-              }}
-            >
-              Token
-            </Button>
-            <Button
-              sx={{
-                width: "222px",
-                height: "40px",
-                border: "2px solid #1949D9",
-                boxSizing: "border-box",
-                borderRadius: "8px",
-                color: "#1949D9",
-                fontWeight: 700,
-                fontSize: "20px",
-                lineHeight: "24px",
-              }}
-              onClick={async () =>
-                await distributorMethod.transferOwnership(address)
-              }
-            >
-              Batch Send
-            </Button>
-          </Box>
+            Change Admin
+          </Button>
+          <Button
+            sx={{
+              width: "222px",
+              height: "60px",
+              border: "2px solid #1949D9",
+              boxSizing: "border-box",
+              borderRadius: "8px",
+              color: "#1949D9",
+              fontWeight: 700,
+              fontSize: "20px",
+              lineHeight: "24px",
+            }}
+            onClick={() => setModal(false)}
+          >
+            Discard
+          </Button>
         </Box>
-        <Button
-          variant="contained"
-          sx={{
-            width: "222px",
-            height: "40px",
-            backgroundColor: "red",
-            borderRadius: "8px",
-            color: "white",
-            fontWeight: 700,
-            fontSize: "20px",
-            lineHeight: "24px",
-            marginTop: "15px",
-          }}
-          onClick={() => setModal(false)}
-        >
-          Cancel
-        </Button>
       </Box>
     </Box>
   );
@@ -169,13 +139,12 @@ const style = {
 
     position: "relative",
     width: "461px",
-    height: "60px !important",
+    height: "60px",
 
     border: "1px solid #C4C4C4",
     boxSizing: "border-box",
     borderRadius: "8px",
     marginTop: "22px",
-    marginBottom: "42px",
   },
 
   imgContainer2: {
