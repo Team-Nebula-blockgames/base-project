@@ -93,7 +93,7 @@ const style = {
   },
 
   input2: {
-    width: "100%",
+    width: "80%",
     height: "100%",
     display: "flex",
     alignItems: "center",

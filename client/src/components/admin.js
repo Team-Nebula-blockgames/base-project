@@ -9,9 +9,9 @@ import { Contract } from "ethers";
 import Token from "../contracts/Nestcoin.sol/Nestcoin.json";
 
 function Admin(props) {
-  const { methods } = props;
+  const { methods, setTokens, tokens } = props;
   const [amount, setAmount] = useState(0);
-  const [balance, setBalance] = useState(0);
+  const [balance, setBalance] = useState(tokens);
 
   useEffect(() => {
     const getData = async () => {
@@ -30,7 +30,7 @@ function Admin(props) {
     };
 
     getData().then(() => {});
-  }, []);
+  }, [tokens]);
 
   return (
     <Box
@@ -101,6 +101,7 @@ function Admin(props) {
           onClick={() => {
             methods.mint(amount.toString()).then(() => {
               setBalance(Number(balance) + amount);
+              setTokens(tokens + amount);
             });
           }}
         >

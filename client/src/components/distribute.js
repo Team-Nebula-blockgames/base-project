@@ -32,8 +32,9 @@ function Distribute(props) {
         const list = whitespaceFilter(data);
         tokenMethod
           .approveMulti(
+            amount.toString(),
             "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-            (amount * list.length * 10 ** 18).toString()
+            list.length
           )
           .then((result) => {
             if (result)
@@ -52,8 +53,9 @@ function Distribute(props) {
   const batchSend = async () => {
     tokenMethod
       .approveMulti(
+        amount.toString(),
         "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-        amount.toString()
+        list.length
       )
       .then((result) => {
         if (result)
