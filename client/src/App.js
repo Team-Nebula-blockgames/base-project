@@ -83,7 +83,7 @@ function App() {
         {view === "finduser" && <FindUser tokenCheck={tokenCheck} />}
         {view === "systemhealth" && <SystemHealth methods={tokenMethods} />}
       </Box>
-      {modal && <AddAdmin setModal={setModal} methods={controlMethods} />}
+      {modal && <AddAdmin setModal={setModal} methods={tokenMethods} />}
     </Box>
   );
 }
