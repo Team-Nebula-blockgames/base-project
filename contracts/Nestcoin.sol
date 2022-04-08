@@ -3,20 +3,12 @@ pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "./AccessControl.sol";
 
-contract Nestcoin is ERC20, Ownable {
+contract Nestcoin is ERC20, Ownable, AccessControl {
     constructor() ERC20("Nestcoin", "NTC") {}
 
-    function mint(uint256 amount) public onlyOwner {
+    function mint(uint256 amount) public onlyRole(ADMIN) {
         _mint(msg.sender, amount * 10**18);
-        _approve(msg.sender, msg.sender, balanceOf(msg.sender));
-    }
-
-    function approveMulti(
-        uint256 amount,
-        address account,
-        uint256 list
-    ) external onlyOwner {
-        approve(account, (amount * list * 10**18));
     }
 }
