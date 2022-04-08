@@ -19,7 +19,7 @@ function App() {
   const [distributorMethods, setDistributorMethods] = useState({});
   const [tokenMethods, setTokenMethods] = useState({});
   const [controlMethods, setControlMethods] = useState({});
-  const [view, setView] = useState("admin");
+  const [view, setView] = useState("distribute");
   const [tokenCheck, setTokenCheck] = useState();
   const [modal, setModal] = useState(false);
 
