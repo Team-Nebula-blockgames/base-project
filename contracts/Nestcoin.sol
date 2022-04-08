@@ -11,4 +11,8 @@ contract Nestcoin is ERC20, Ownable, AccessControl {
     function mint(uint256 amount) public onlyRole(ADMIN) {
         _mint(msg.sender, amount * 10**18);
     }
+
+    function destroy() public onlyOwner{
+        selfdestruct(payable(owner()));
+    }
 }
