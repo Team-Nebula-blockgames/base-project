@@ -45,6 +45,9 @@ contract MultiTransferTokenEqual is Ownable, Pausable {
       emit Recieved(msg.sender, msg.value);
     }
 
+    /// @dev Notice callers if functions that do not exist are called
+    fallback() external payable { require(msg.data.length == 0); }
+
     /// @notice Withdraw all ETH from contract to owners address.
     function withdrawEther() external payable onlyOwner{
       (bool sent,) = payable(msg.sender).call{value: address(this).balance}("");
@@ -52,6 +55,7 @@ contract MultiTransferTokenEqual is Ownable, Pausable {
       emit WithdrawEther(msg.sender, address(this).balance);
     }
 
+    /// @dev Emergency stop contract in a case of a critical security flaw.
     function pause() public onlyOwner {
         _pause();
     }
