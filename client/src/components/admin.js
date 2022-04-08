@@ -103,9 +103,9 @@ function Admin(props) {
           }}
           onClick={() => {
             methods
-              .mint(utils.parseEther(amount.toString()))
+              .mint(amount.toString())
               .then(() => {
-                setBalance(Number(balance) + amount);
+                // setBalance(Number(balance) + amount);
                 setTokens(tokens + amount);
                 setOpen(true);
                 setTimeout(() => {
