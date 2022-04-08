@@ -1,7 +1,7 @@
 const { ethers } = require("hardhat");
 const { expect } = require("chai");
 
-describe("MultiTransferTokenEqual", function () {
+describe("MultiTransferTokenEqual Contract", function () {
   beforeEach(async () => {
     accounts = await ethers.getSigners();
     admin = accounts[0];
@@ -18,7 +18,7 @@ describe("MultiTransferTokenEqual", function () {
     await multiTransferTokenEqualContract.deployed();
   });
 
-  it("Should deploy  contract", async function () {
+  it("Should deploy contract and set owner", async function () {
     let nestCoinOwner = await nestCoinContract.owner();
     let multiTransferTokenEqualOwner =
       await multiTransferTokenEqualContract.owner();
@@ -32,9 +32,9 @@ describe("MultiTransferTokenEqual", function () {
     ).equals(admin.address);
   });
 
-  it("Should perform a batch transfer", async function () {
+  it("Should allow owner perform batch token transfers", async function () {
     let amount = 10;
-    let mintedTokens = 1000;
+    let mintedTokens = 1000000;
     let _addresses = [
       accounts[2].address,
       accounts[3].address,
@@ -44,9 +44,10 @@ describe("MultiTransferTokenEqual", function () {
     await nestCoinContract.mint(mintedTokens);
     await nestCoinContract.approve(
       multiTransferTokenEqualContract.address,
-      1000
+      ethers.utils.parseEther(String(mintedTokens))
     );
     let adminBalance = Number(await nestCoinContract.balanceOf(admin.address));
+    console.log("admin bal:", adminBalance);
     await multiTransferTokenEqualContract.multiSend(
       nestCoinContract.address,
       _addresses,
@@ -54,26 +55,28 @@ describe("MultiTransferTokenEqual", function () {
     );
 
     expect(Number(await nestCoinContract.balanceOf(admin.address))).equals(
-      adminBalance - amount * _addresses.length
+      adminBalance -
+        Number(ethers.utils.parseEther(String(amount)) * _addresses.length)
     );
 
     expect(Number(await nestCoinContract.balanceOf(_addresses[0]))).equals(
-      amount
+      Number(ethers.utils.parseEther(String(amount)))
     );
 
     expect(Number(await nestCoinContract.balanceOf(_addresses[1]))).equals(
-      amount
+      Number(ethers.utils.parseEther(String(amount)))
     );
 
     expect(Number(await nestCoinContract.balanceOf(_addresses[2]))).equals(
-      amount
+      Number(ethers.utils.parseEther(String(amount)))
     );
   });
 
-  it("Should transfer to new admin", async () => {
+  it("Should allow new admins perform batch token transfers.", async () => {
     let newAdmin = accounts[1];
-    await multiTransferTokenEqualContract.transferOwnership(newAdmin.address);
-    await nestCoinContract.transferOwnership(newAdmin.address);
+    const ADMIN_HASH =
+      "0xdf8b4c520ffe197c5343c6f5aec59570151ef9a492f2c624fd45ddde6135ec42"; //hash for role admin
+    await nestCoinContract.grantRole(ADMIN_HASH, newAdmin.address);
 
     let amount = 10;
     let mintedTokens = 1000;
@@ -86,7 +89,10 @@ describe("MultiTransferTokenEqual", function () {
     await nestCoinContract.connect(newAdmin).mint(mintedTokens);
     await nestCoinContract
       .connect(newAdmin)
-      .approve(multiTransferTokenEqualContract.address, 1000);
+      .approve(
+        multiTransferTokenEqualContract.address,
+        ethers.utils.parseEther(String(mintedTokens))
+      );
     let newAdminBalance = Number(
       await nestCoinContract.balanceOf(newAdmin.address)
     );
@@ -96,7 +102,8 @@ describe("MultiTransferTokenEqual", function () {
       .multiSend(nestCoinContract.address, _addresses, amount);
 
     expect(Number(await nestCoinContract.balanceOf(newAdmin.address))).equals(
-      newAdminBalance - amount * _addresses.length
+      newAdminBalance -
+        Number(ethers.utils.parseEther(String(amount)) * _addresses.length)
     );
   });
 });
