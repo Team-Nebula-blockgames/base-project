@@ -29,17 +29,17 @@ function App() {
       const signer = provider.getSigner();
       const address = signer.getAddress();
       const tokenContract = new Contract(
-        "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+        "0x871627EE23CEe66F005C84e1eB83adf8AFF19bC6",
         Token.abi,
         provider
       );
       const distributorContract = new Contract(
-        "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+        "0x6bb927c6A8f51A25B4EB5c1D3Fc8683a55f5E866",
         Distributor.abi,
         provider
       );
       const controlContract = new Contract(
-        "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+        "0x4fa0F7c85475b1B4798562164B172cEeb57CB7c2",
         Control.abi,
         provider
       );
@@ -58,7 +58,6 @@ function App() {
       //   setEthBalance(balance);
       // });
     };
-
     getData().then(() => {});
   }, []);
 

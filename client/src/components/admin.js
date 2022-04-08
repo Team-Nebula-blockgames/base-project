@@ -105,8 +105,13 @@ function Admin(props) {
             methods
               .mint(amount.toString())
               .then(() => {
+<<<<<<< HEAD
                 // setBalance(Number(balance) + amount);
                 setTokens(tokens + amount);
+=======
+                setBalance(Number(balance) + amount);
+                setTokens(Number(tokens) + amount);
+>>>>>>> 503b0671d91bede93271386fca6da409a78411d9
                 setOpen(true);
                 setTimeout(() => {
                   setOpen(false);

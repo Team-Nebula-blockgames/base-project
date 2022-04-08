@@ -113,6 +113,7 @@ function AddAdmin(props) {
               lineHeight: "24px",
             }}
             onClick={async () => {
+              console.log(address);
               await methods
                 .grantRole(
                   "0xdf8b4c520ffe197c5343c6f5aec59570151ef9a492f2c624fd45ddde6135ec42",
@@ -166,7 +167,7 @@ function AddAdmin(props) {
                 });
             }}
           >
-            Removed Admin
+            Remove Admin
           </Button>
         </Box>
       </Box>

@@ -333,7 +333,7 @@ function Distribute(props) {
               fontWeight: 700,
             }}
           >
-            Tokens Minted!
+            Tokens have been Distributed!
           </Typography>
         </Box>
       )}
