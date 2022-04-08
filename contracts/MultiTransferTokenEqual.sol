@@ -6,8 +6,10 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 /// @notice Transfer equal tokens amount to multiple addresses
-contract MultiTransferTokenEqual is Ownable {
+contract MultiTransferTokenEqual is Ownable{
   using SafeERC20 for IERC20;
+  event Recieved(address _sender, uint256 _amount);
+  event WithdrawEther(address _reciever, uint256 _amount);
 
 /** 
   @notice Send equal ERC20 tokens amount to multiple addresses
@@ -21,7 +23,7 @@ contract MultiTransferTokenEqual is Ownable {
     address _token,
     address[] calldata _addresses,
     uint256 _amount
-  ) payable external onlyOwner
+  ) payable external
   {
     require(_addresses.length <= 200, "Max of 200 addresses");
 
@@ -36,5 +38,15 @@ contract MultiTransferTokenEqual is Ownable {
             token.safeTransfer(_addresses[i], _amount * 10**18);
         }
     }
+
+    receive() external payable {
+      emit Recieved(msg.sender, msg.value);
+    }
+
+    /// @notice Withdraw all ETH from contract to owners address.
+    function withdrawEther() external payable onlyOwner{
+      (bool sent,) = payable(msg.sender).call{value: address(this).balance}("");
+      require(sent, "Failed to send Ether");
+      emit WithdrawEther(msg.sender, address(this).balance);
+    }
   }
-}
