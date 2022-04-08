@@ -13,18 +13,16 @@ contract MultiTransferTokenEqual is Ownable, Pausable {
     event WithdrawEther(address _reciever, uint256 _amount);
 
     /** 
-  @notice Send equal ERC20 tokens amount to multiple addresses
-  @param _token The token to send
-  @param _addresses Array of addresses to send to
-  @param _amount Tokens amount to send to each address
-
-*/
-
+    @notice Send equal ERC20 tokens amount to multiple addresses
+    @param _token The token to send
+    @param _addresses Array of addresses to send to
+    @param _amount Tokens amount to send to each address
+   */
     function multiSend(
         address _token,
         address[] calldata _addresses,
         uint256 _amount
-    ) external payable whenNotPaused {
+    ) external whenNotPaused {
         INestcoin token = INestcoin(_token);
         require(token.isAdmin(msg.sender), "You are not an admin");
         require(_addresses.length <= 200, "Max of 200 addresses");
@@ -33,7 +31,7 @@ contract MultiTransferTokenEqual is Ownable, Pausable {
 
         require(
             token.balanceOf(msg.sender) >= _amountSum,
-            "Token Balance is Low, mint more tokens to send"
+            "Insufficient token balance"
         );
         token.safeTransferFrom(msg.sender, address(this), _amountSum);
         for (uint8 i; i < _addresses.length; i++) {

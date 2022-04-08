@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import getEthers from "./getEthers";
 import { Contract, utils } from "ethers";
-import Token from "./contracts/Nestcoin.sol/Nestcoin.json";
-import Distributor from "./contracts/MultiTransferTokenEqual.sol/MultiTransferTokenEqual.json";
-import Control from "./contracts/AccessControl.sol/AccessControl.json";
+import Token from "./contracts/Nestcoin.json";
+import Distributor from "./contracts/MultiTransferTokenEqual.json";
+import Control from "./contracts/AccessControl.json";
 import "./App.css";
 import Box from "@mui/material/Box";
 import NavBar from "./components/navbar";
