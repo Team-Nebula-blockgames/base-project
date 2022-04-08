@@ -36,6 +36,10 @@ contract AccessControl {
         _grantRole(_role, _account);
     }
 
+    function isAdmin(address _address) public view returns (bool) {
+        return roles[ADMIN][_address];
+    }
+
     function removeRole(bytes32 _role, address _account)
         external
         onlyRole(ADMIN)

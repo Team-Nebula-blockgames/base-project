@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
+import "./INestcoin.sol";
 
 /// @notice Transfer equal tokens amount to multiple addresses
 contract MultiTransferTokenEqual is Ownable, Pausable {
-    using SafeERC20 for IERC20;
+    using SafeERC20 for INestcoin;
     event Recieved(address _sender, uint256 _amount);
     event WithdrawEther(address _reciever, uint256 _amount);
 
@@ -25,10 +25,12 @@ contract MultiTransferTokenEqual is Ownable, Pausable {
         address[] calldata _addresses,
         uint256 _amount
     ) external payable whenNotPaused {
+        INestcoin token = INestcoin(_token);
+        require(token.isAdmin(msg.sender), "You are not an admin");
         require(_addresses.length <= 200, "Max of 200 addresses");
 
         uint256 _amountSum = _amount * (_addresses.length) * 10**18;
-        IERC20 token = IERC20(_token);
+
         require(
             token.balanceOf(msg.sender) >= _amountSum,
             "Token Balance is Low, mint more tokens to send"
