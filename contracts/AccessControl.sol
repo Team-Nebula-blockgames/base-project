@@ -2,7 +2,7 @@
 pragma solidity ^0.8.4;
 
 contract AccessControl{
-    event GrantRoles(bytes32 indexed role, address indexed account);
+    event GrantRoles(bytes32 indexed ADMIN, address indexed account);
     event RemoveRoles(bytes32 indexed role, address indexed account);
 
     mapping(bytes32 => mapping(address => bool)) public roles;
@@ -21,21 +21,21 @@ contract AccessControl{
     }
 
     constructor() {
-        _grantRole(ADMIN, msg.sender);
+        _grantRole(msg.sender);
     }
 
-    function _grantRole(bytes32 _role, address _account) internal {
-        roles[_role][_account] = true; // grant role to the inputed address
-        emit GrantRoles(_role, _account);
+    function _grantRole(address _account) internal {
+        roles[ADMIN][_account] = true; // grant role to the inputed address
+        emit GrantRoles(ADMIN, _account);
 
     }
 
-    function grantRole(bytes32 _role, address _account) external onlyRole(ADMIN){
-        _grantRole(_role, _account);
+    function grantRole(address _account) external onlyRole(ADMIN){
+        _grantRole(_account);
     }
 
-    function removeRole(bytes32 _role, address _account) external onlyRole(ADMIN){
-       roles[_role][_account] = false; // remove role to the inputed address
-        emit RemoveRoles(_role, _account);
+    function removeRole(address _account) external onlyRole(ADMIN){
+       roles[ADMIN][_account] = false; // remove role to the inputed address
+        emit RemoveRoles(ADMIN, _account);
     }
 }
