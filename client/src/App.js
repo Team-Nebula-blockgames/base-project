@@ -58,7 +58,6 @@ function App() {
       //   setEthBalance(balance);
       // });
     };
-
     getData().then(() => {});
   }, []);
 
