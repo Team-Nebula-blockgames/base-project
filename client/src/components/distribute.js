@@ -44,7 +44,7 @@ function Distribute(props) {
                 .multiSend(
                   "0x5FbDB2315678afecb367f032d93F642f64180aa3",
                   list,
-                  utils.parseEther(amount.toString())
+                  amount.toString()
                 )
                 .then(() => {
                   setTokens(tokens - amount * list.length);
@@ -76,7 +76,7 @@ function Distribute(props) {
             .multiSend(
               "0x5FbDB2315678afecb367f032d93F642f64180aa3",
               list,
-              utils.parseEther(amount.toString())
+              amount.toString()
             )
             .then(() => {
               setTokens(tokens - amount * list.length);
