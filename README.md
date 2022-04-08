@@ -1,16 +1,32 @@
-# Advanced Sample Hardhat Project
+# Nestcoin Filmhouse Project
+This project require the team to come up with a system to create a token, distribute the token and also transfer the token in batch.
 
-This project demonstrates an advanced Hardhat use case, integrating other tools commonly used alongside Hardhat in the ecosystem.
+The features implemented in the project are:
+* Create the ERC 20 Token (Nestcoin) with an unlimited supply and also Mint the token(Admin) *
+* Transfer the tokens should only be done by an Admin*
+* The Admin Access is just for one address, who can later add new admins
+* There are event for distribution of tokens and adding new admins.
 
-The project comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts. It also comes with a variety of other tools, preconfigured to work with the project code.
-
-N/B: When adding new contracts contract name and contract file name should be same.
+The project is divided into two, The contract and the client, 
 
 # Client folder
+This contain the frontend code for the MVP, purely developed in ReactJs (A framework for developing user interface)
 
-The client folder is the folder for the react frontend app calling the contracts. The client/contracts directory contains the compiled contracts for the react front end application.
+# Contracts folder
+This contain the smart contracts for creating token, distributing token and also the admin priviledge, it was developed with Hardhat (A framework for solidity development)
 
-# Steps
+* Notable Functions in the Contract
+- AccessControl.sol : Managing the admin access
+- Nestcoin.sol : Creating the token
+-MultiTransferTokenEqual.sol : distributing tokens to customers either in batch or in unit.
+
+
+
+
+
+# Contribution Guide
+
+Create a PR to the development branch, clone it to your local IDE,
 
 - Create a .env file with the following variables
 
