@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import getEthers from "./getEthers";
-import { Contract } from "ethers";
+import { Contract, utils } from "ethers";
 import Token from "./contracts/Nestcoin.sol/Nestcoin.json";
 import Distributor from "./contracts/MultiTransferTokenEqual.sol/MultiTransferTokenEqual.json";
 import "./App.css";
@@ -10,6 +10,7 @@ import SideBar from "./components/sidebar";
 import Distribute from "./components/distribute";
 import Admin from "./components/admin";
 import AddAdmin from "./components/addAdmin";
+import FindUser from "./components/findUser";
 
 function App() {
   const [tokens, setTokens] = useState(0);
@@ -17,7 +18,6 @@ function App() {
   const [tokenMethods, setTokenMethods] = useState({});
   const [view, setView] = useState("admin");
   const [tokenCheck, setTokenCheck] = useState();
-  const [address, setAddress] = useState("");
   const [modal, setModal] = useState(false);
 
   useEffect(() => {
@@ -39,9 +39,8 @@ function App() {
       setTokenMethods(tokenContract.connect(signer));
       // getting the balance of tokens and setting it
       const tokenBalance = (await tokenContract.balanceOf(address)).toString();
-      setTokenCheck(tokenContract.balanceOf);
-      setAddress(address);
-      setTokens(tokenBalance / 10 ** 18);
+      setTokenCheck(tokenContract);
+      setTokens(utils.formatEther(tokenBalance));
       // contract.on("Transfer", async (from, to, amount, event) => {
       //   const bal = await provider.getBalance(address);
       //   const balance = utils.formatEther(bal);
@@ -68,14 +67,9 @@ function App() {
           />
         )}
         {view === "admin" && (
-          <Admin
-            methods={tokenMethods}
-            getBalance={tokenCheck}
-            address={address}
-            setTokens={setTokens}
-            tokens={tokens}
-          />
+          <Admin methods={tokenMethods} setTokens={setTokens} tokens={tokens} />
         )}
+        {view === "finduser" && <FindUser tokenCheck={tokenCheck} />}
       </Box>
       {modal && (
         <AddAdmin

@@ -34,7 +34,11 @@ function SideBar(props) {
       >
         General
       </Typography>
-      <SideBarItem text={"Dashboard"} icon={<DashBoard />} />
+      <SideBarItem
+        text={"Customer"}
+        icon={<DashBoard />}
+        onClick={() => setView("finduser")}
+      />
       <SideBarItem text={"Tickets"} icon={<Tickets />} />
       <SideBarItem text={"Orders"} icon={<Person />} />
       <SideBarItem text={"Movie Stats"} icon={<Stats />} />
@@ -48,7 +52,7 @@ function SideBar(props) {
           paddingLeft: "24px",
         }}
       >
-        General
+        Adminstrative
       </Typography>
       <SideBarItem
         text={"Admin"}

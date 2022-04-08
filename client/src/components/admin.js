@@ -5,13 +5,15 @@ import Button from "@mui/material/Button";
 import token from "../images/token.svg";
 import Input from "./input";
 import getEthers from "../getEthers";
-import { Contract } from "ethers";
+import { Contract, utils } from "ethers";
 import Token from "../contracts/Nestcoin.sol/Nestcoin.json";
 
 function Admin(props) {
   const { methods, setTokens, tokens } = props;
   const [amount, setAmount] = useState(0);
   const [balance, setBalance] = useState(tokens);
+  const [open, setOpen] = useState(false);
+  const [open2, setOpen2] = useState(false);
 
   useEffect(() => {
     const getData = async () => {
@@ -99,15 +101,77 @@ function Admin(props) {
             lineHeight: "24px",
           }}
           onClick={() => {
-            methods.mint(amount.toString()).then(() => {
-              setBalance(Number(balance) + amount);
-              setTokens(tokens + amount);
-            });
+            methods
+              .mint(utils.parseEther(amount.toString()))
+              .then(() => {
+                setBalance(Number(balance) + amount);
+                setTokens(tokens + amount);
+                setOpen(true);
+                setTimeout(() => {
+                  setOpen(false);
+                }, 1000);
+              })
+              .catch(() => {
+                setOpen2(true);
+                setTimeout(() => {
+                  setOpen2(false);
+                }, 1000);
+              });
           }}
         >
           Mint
         </Button>
       </Box>
+      {open && (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 20,
+            background: "green",
+            color: "white",
+            width: "500px",
+            height: "100px",
+            position: "absolute",
+          }}
+        >
+          <Typography
+            sx={{
+              color: "white",
+              fontSize: "24px",
+              fontWeight: 700,
+            }}
+          >
+            Tokens Minted!
+          </Typography>
+        </Box>
+      )}
+      {open2 && (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 20,
+            background: "red",
+            color: "white",
+            width: "500px",
+            height: "100px",
+            position: "absolute",
+          }}
+        >
+          <Typography
+            sx={{
+              color: "white",
+              fontSize: "24px",
+              fontWeight: 700,
+            }}
+          >
+            Transaction Failed
+          </Typography>
+        </Box>
+      )}
     </Box>
   );
 }

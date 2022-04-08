@@ -7,6 +7,7 @@ import upload from "../images/upload.svg";
 import token from "../images/token.svg";
 import Input from "./input";
 import Input2 from "./input2";
+import { utils } from "ethers";
 import { usePapaParse } from "react-papaparse";
 import whitespaceFilter from "../utils/whitespaceFilter";
 
@@ -16,6 +17,8 @@ function Distribute(props) {
   const [amount, setAmount] = useState(0);
   const [text, setText] = useState("");
   const [list, setList] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [open2, setOpen2] = useState(false);
 
   const { readString } = usePapaParse();
 
@@ -31,10 +34,9 @@ function Distribute(props) {
         console.log("---------------------------");
         const list = whitespaceFilter(data);
         tokenMethod
-          .approveMulti(
-            amount.toString(),
+          .approve(
             "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-            list.length
+            utils.parseEther((amount * list.length).toString())
           )
           .then((result) => {
             if (result)
@@ -42,9 +44,20 @@ function Distribute(props) {
                 .multiSend(
                   "0x5FbDB2315678afecb367f032d93F642f64180aa3",
                   list,
-                  amount.toString()
+                  utils.parseEther(amount.toString())
                 )
-                .then(() => console.log("Distributed tokens"));
+                .then(() => {
+                  setOpen(true);
+                  setTimeout(() => {
+                    setOpen(false);
+                  }, 1000);
+                })
+                .catch(() => {
+                  setOpen2(true);
+                  setTimeout(() => {
+                    setOpen2(false);
+                  }, 1000);
+                });
           });
       },
     });
@@ -52,10 +65,9 @@ function Distribute(props) {
 
   const batchSend = async () => {
     tokenMethod
-      .approveMulti(
-        amount.toString(),
+      .approve(
         "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-        list.length
+        utils.parseEther((amount * list.length).toString())
       )
       .then((result) => {
         if (result)
@@ -63,9 +75,21 @@ function Distribute(props) {
             .multiSend(
               "0x5FbDB2315678afecb367f032d93F642f64180aa3",
               list,
-              amount.toString()
+              utils.parseEther(amount.toString())
             )
-            .then(() => console.log("Distributed tokens"));
+            .then(() => {
+              console.log("Distributed tokens");
+              setOpen(true);
+              setTimeout(() => {
+                setOpen(false);
+              }, 1000);
+            })
+            .catch(() => {
+              setOpen2(true);
+              setTimeout(() => {
+                setOpen2(false);
+              }, 1000);
+            });
       });
   };
   return (
@@ -287,6 +311,56 @@ function Distribute(props) {
           </Button>
         </Box>
       </Box>
+      {open && (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 20,
+            background: "green",
+            color: "white",
+            width: "500px",
+            height: "100px",
+            position: "absolute",
+          }}
+        >
+          <Typography
+            sx={{
+              color: "white",
+              fontSize: "24px",
+              fontWeight: 700,
+            }}
+          >
+            Tokens Minted!
+          </Typography>
+        </Box>
+      )}
+      {open2 && (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 20,
+            background: "red",
+            color: "white",
+            width: "500px",
+            height: "100px",
+            position: "absolute",
+          }}
+        >
+          <Typography
+            sx={{
+              color: "white",
+              fontSize: "24px",
+              fontWeight: 700,
+            }}
+          >
+            Transaction Failed
+          </Typography>
+        </Box>
+      )}
     </Box>
   );
 }
