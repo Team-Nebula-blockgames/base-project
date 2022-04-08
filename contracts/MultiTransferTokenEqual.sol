@@ -4,9 +4,11 @@ pragma solidity ^0.8.4;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/Pausable.sol";
+
 
 /// @notice Transfer equal tokens amount to multiple addresses
-contract MultiTransferTokenEqual is Ownable{
+contract MultiTransferTokenEqual is Ownable, Pausable {
   using SafeERC20 for IERC20;
   event Recieved(address _sender, uint256 _amount);
   event WithdrawEther(address _reciever, uint256 _amount);
@@ -23,7 +25,7 @@ contract MultiTransferTokenEqual is Ownable{
     address _token,
     address[] calldata _addresses,
     uint256 _amount
-  ) payable external
+  ) payable external whenNotPaused
   {
     require(_addresses.length <= 200, "Max of 200 addresses");
 
@@ -49,4 +51,14 @@ contract MultiTransferTokenEqual is Ownable{
       require(sent, "Failed to send Ether");
       emit WithdrawEther(msg.sender, address(this).balance);
     }
+
+    function pause() public onlyOwner {
+        _pause();
+    }
+
+    function unpause() public onlyOwner {
+        _unpause();
+    }
+
   }
+
