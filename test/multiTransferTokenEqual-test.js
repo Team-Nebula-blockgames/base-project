@@ -1,5 +1,7 @@
+const chai = require("chai");
+const { expect, assert } = chai;
+chai.use(require("chai-as-promised"));
 const { ethers } = require("hardhat");
-const { expect } = require("chai");
 
 describe("MultiTransferTokenEqual Contract", function () {
   beforeEach(async () => {
@@ -32,47 +34,47 @@ describe("MultiTransferTokenEqual Contract", function () {
     ).equals(admin.address);
   });
 
-  it("Should allow owner perform batch token transfers", async function () {
-    let amount = 10;
-    let mintedTokens = 1000000;
-    let _addresses = [
-      accounts[2].address,
-      accounts[3].address,
-      accounts[4].address,
-    ];
+  // it("Should allow owner perform batch token transfers", async function () {
+  //   let amount = 10;
+  //   let mintedTokens = 1000000;
+  //   let _addresses = [
+  //     accounts[2].address,
+  //     accounts[3].address,
+  //     accounts[4].address,
+  //   ];
 
-    await nestCoinContract.mint(mintedTokens);
-    await nestCoinContract.approve(
-      multiTransferTokenEqualContract.address,
-      ethers.utils.parseEther(String(mintedTokens))
-    );
-    let adminBalance = Number(await nestCoinContract.balanceOf(admin.address));
-    console.log("admin bal:", adminBalance);
-    await multiTransferTokenEqualContract.multiSend(
-      nestCoinContract.address,
-      _addresses,
-      amount
-    );
+  //   await nestCoinContract.mint(mintedTokens);
+  //   await nestCoinContract.approve(
+  //     multiTransferTokenEqualContract.address,
+  //     ethers.utils.parseEther(String(mintedTokens))
+  //   );
+  //   let adminBalance = Number(await nestCoinContract.balanceOf(admin.address));
+  //   console.log("admin bal:", adminBalance);
+  //   await multiTransferTokenEqualContract.multiSend(
+  //     nestCoinContract.address,
+  //     _addresses,
+  //     amount
+  //   );
 
-    expect(Number(await nestCoinContract.balanceOf(admin.address))).equals(
-      adminBalance -
-        Number(ethers.utils.parseEther(String(amount)) * _addresses.length)
-    );
+  //   expect(Number(await nestCoinContract.balanceOf(admin.address))).equals(
+  //     adminBalance -
+  //       Number(ethers.utils.parseEther(String(amount)) * _addresses.length)
+  //   );
 
-    expect(Number(await nestCoinContract.balanceOf(_addresses[0]))).equals(
-      Number(ethers.utils.parseEther(String(amount)))
-    );
+  //   expect(Number(await nestCoinContract.balanceOf(_addresses[0]))).equals(
+  //     Number(ethers.utils.parseEther(String(amount)))
+  //   );
 
-    expect(Number(await nestCoinContract.balanceOf(_addresses[1]))).equals(
-      Number(ethers.utils.parseEther(String(amount)))
-    );
+  //   expect(Number(await nestCoinContract.balanceOf(_addresses[1]))).equals(
+  //     Number(ethers.utils.parseEther(String(amount)))
+  //   );
 
-    expect(Number(await nestCoinContract.balanceOf(_addresses[2]))).equals(
-      Number(ethers.utils.parseEther(String(amount)))
-    );
-  });
+  //   expect(Number(await nestCoinContract.balanceOf(_addresses[2]))).equals(
+  //     Number(ethers.utils.parseEther(String(amount)))
+  //   );
+  // });
 
-  it("Should allow new admins perform batch token transfers.", async () => {
+  it("Should allow only admins perform batch token transfers.", async () => {
     let newAdmin = accounts[1];
     const ADMIN_HASH =
       "0xdf8b4c520ffe197c5343c6f5aec59570151ef9a492f2c624fd45ddde6135ec42"; //hash for role admin
@@ -101,9 +103,17 @@ describe("MultiTransferTokenEqual Contract", function () {
       .connect(newAdmin)
       .multiSend(nestCoinContract.address, _addresses, amount);
 
-    expect(Number(await nestCoinContract.balanceOf(newAdmin.address))).equals(
-      newAdminBalance -
-        Number(ethers.utils.parseEther(String(amount)) * _addresses.length)
+    const tryCallMultiSend = async () => {
+      await multiTransferTokenEqualContract
+        .connect(accounts[2])
+        .multiSend(nestCoinContract.address, _addresses, amount);
+    };
+    await expect(tryCallMultiSend()).to.be.rejectedWith(
+      "VM Exception while processing transaction: reverted with reason string 'You are not an admin'"
     );
+    // expect(Number(await nestCoinContract.balanceOf(newAdmin.address))).equals(
+    //   newAdminBalance -
+    //     Number(ethers.utils.parseEther(String(amount)) * _addresses.length)
+    // );
   });
 });

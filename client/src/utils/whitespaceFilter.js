@@ -12,6 +12,7 @@ const whitespaceFilter = (list) => {
     var temp2 = list[i].trim();
     if (temp2.substring(0, 2) === "0x") array.push(temp2);
   }
+  if (array.length > 200) array = array.splice(0, 200);
   return array;
 };
 
