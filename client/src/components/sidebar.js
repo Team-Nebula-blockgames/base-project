@@ -65,7 +65,11 @@ function SideBar(props) {
         icon={<Bell />}
         onClick={() => setView("distribute")}
       />
-      <SideBarItem text={"System Health"} icon={<System />} />
+      <SideBarItem
+        text={"System Health"}
+        icon={<System />}
+        onClick={() => setView("systemhealth")}
+      />
     </Box>
   );
 }

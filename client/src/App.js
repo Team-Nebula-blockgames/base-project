@@ -3,6 +3,7 @@ import getEthers from "./getEthers";
 import { Contract, utils } from "ethers";
 import Token from "./contracts/Nestcoin.sol/Nestcoin.json";
 import Distributor from "./contracts/MultiTransferTokenEqual.sol/MultiTransferTokenEqual.json";
+import Control from "./contracts/AccessControl.sol/AccessControl.json";
 import "./App.css";
 import Box from "@mui/material/Box";
 import NavBar from "./components/navbar";
@@ -11,11 +12,13 @@ import Distribute from "./components/distribute";
 import Admin from "./components/admin";
 import AddAdmin from "./components/addAdmin";
 import FindUser from "./components/findUser";
+import SystemHealth from "./components/systemHealth";
 
 function App() {
   const [tokens, setTokens] = useState(0);
   const [distributorMethods, setDistributorMethods] = useState({});
   const [tokenMethods, setTokenMethods] = useState({});
+  const [controlMethods, setControlMethods] = useState({});
   const [view, setView] = useState("admin");
   const [tokenCheck, setTokenCheck] = useState();
   const [modal, setModal] = useState(false);
@@ -35,8 +38,14 @@ function App() {
         Distributor.abi,
         provider
       );
+      const controlContract = new Contract(
+        "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+        Control.abi,
+        provider
+      );
       setDistributorMethods(distributorContract.connect(signer));
       setTokenMethods(tokenContract.connect(signer));
+      setControlMethods(controlContract.connect(signer));
       // getting the balance of tokens and setting it
       const tokenBalance = (await tokenContract.balanceOf(address)).toString();
       setTokenCheck(tokenContract);
@@ -64,20 +73,17 @@ function App() {
           <Distribute
             tokenMethod={tokenMethods}
             distributorMethod={distributorMethods}
+            setTokens={setTokens}
+            tokens={tokens}
           />
         )}
         {view === "admin" && (
           <Admin methods={tokenMethods} setTokens={setTokens} tokens={tokens} />
         )}
         {view === "finduser" && <FindUser tokenCheck={tokenCheck} />}
+        {view === "systemhealth" && <SystemHealth methods={tokenMethods} />}
       </Box>
-      {modal && (
-        <AddAdmin
-          setModal={setModal}
-          tokenMethod={tokenMethods}
-          distributorMethod={distributorMethods}
-        />
-      )}
+      {modal && <AddAdmin setModal={setModal} methods={controlMethods} />}
     </Box>
   );
 }

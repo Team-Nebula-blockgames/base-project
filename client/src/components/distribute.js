@@ -12,7 +12,7 @@ import { usePapaParse } from "react-papaparse";
 import whitespaceFilter from "../utils/whitespaceFilter";
 
 function Distribute(props) {
-  const { tokenMethod, distributorMethod } = props;
+  const { tokenMethod, distributorMethod, setTokens, tokens } = props;
   const [csv, setCsv] = useState(true);
   const [amount, setAmount] = useState(0);
   const [text, setText] = useState("");
@@ -47,16 +47,17 @@ function Distribute(props) {
                   utils.parseEther(amount.toString())
                 )
                 .then(() => {
+                  setTokens(tokens - amount * list.length);
                   setOpen(true);
                   setTimeout(() => {
                     setOpen(false);
-                  }, 1000);
+                  }, 1500);
                 })
                 .catch(() => {
                   setOpen2(true);
                   setTimeout(() => {
                     setOpen2(false);
-                  }, 1000);
+                  }, 1500);
                 });
           });
       },
@@ -78,17 +79,17 @@ function Distribute(props) {
               utils.parseEther(amount.toString())
             )
             .then(() => {
-              console.log("Distributed tokens");
+              setTokens(tokens - amount * list.length);
               setOpen(true);
               setTimeout(() => {
                 setOpen(false);
-              }, 1000);
+              }, 1500);
             })
             .catch(() => {
               setOpen2(true);
               setTimeout(() => {
                 setOpen2(false);
-              }, 1000);
+              }, 1500);
             });
       });
   };

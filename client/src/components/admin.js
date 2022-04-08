@@ -27,7 +27,8 @@ function Admin(props) {
       );
 
       tokenContract.balanceOf(address).then((result) => {
-        setBalance(result / 10 ** 18);
+        console.log("Its updating");
+        setBalance(utils.formatEther(result));
       });
     };
 
@@ -109,13 +110,13 @@ function Admin(props) {
                 setOpen(true);
                 setTimeout(() => {
                   setOpen(false);
-                }, 1000);
+                }, 1500);
               })
               .catch(() => {
                 setOpen2(true);
                 setTimeout(() => {
                   setOpen2(false);
-                }, 1000);
+                }, 1500);
               });
           }}
         >
