@@ -6,7 +6,7 @@ import token from "../images/token.svg";
 import Input from "./input";
 import getEthers from "../getEthers";
 import { Contract, utils } from "ethers";
-import Token from "../contracts/Nestcoin.sol/Nestcoin.json";
+import Token from "../contracts/Nestcoin.json";
 
 function Admin(props) {
   const { methods, setTokens, tokens } = props;
