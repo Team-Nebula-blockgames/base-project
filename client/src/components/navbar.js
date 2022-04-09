@@ -66,7 +66,7 @@ function NavBar(props) {
             }}
             onClick={() => setModal(true)}
           >
-            Change Admin
+            Add/Remove Admin
           </Button>
         </Grid>
       </Grid>

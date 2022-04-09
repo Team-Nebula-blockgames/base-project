@@ -7,15 +7,18 @@ import upload from "../images/upload.svg";
 import token from "../images/token.svg";
 import Input from "./input";
 import Input2 from "./input2";
+import { utils } from "ethers";
 import { usePapaParse } from "react-papaparse";
 import whitespaceFilter from "../utils/whitespaceFilter";
 
 function Distribute(props) {
-  const { methods } = props;
+  const { tokenMethod, distributorMethod, setTokens, tokens } = props;
   const [csv, setCsv] = useState(true);
   const [amount, setAmount] = useState(0);
   const [text, setText] = useState("");
   const [list, setList] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [open2, setOpen2] = useState(false);
 
   const { readString } = usePapaParse();
 
@@ -24,25 +27,72 @@ function Distribute(props) {
 
     readString(csvString, {
       worker: true,
-      complete: (results) => {
+      complete: async (results) => {
         const data = results.data[0];
         console.log("---------------------------");
         console.log(whitespaceFilter(data));
         console.log("---------------------------");
         const list = whitespaceFilter(data);
-        methods
-          .multiSend(
-            "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-            list,
-            amount.toString()
+        tokenMethod
+          .approve(
+            "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+            utils.parseEther((amount * list.length).toString())
           )
-          .then(() => {
-            console.log("Distributed");
+          .then((result) => {
+            if (result)
+              distributorMethod
+                .multiSend(
+                  "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+                  list,
+                  amount.toString()
+                )
+                .then(() => {
+                  setTokens(tokens - amount * list.length);
+                  setOpen(true);
+                  setTimeout(() => {
+                    setOpen(false);
+                  }, 1500);
+                })
+                .catch(() => {
+                  setOpen2(true);
+                  setTimeout(() => {
+                    setOpen2(false);
+                  }, 1500);
+                });
           });
       },
     });
   };
 
+  const batchSend = async () => {
+    tokenMethod
+      .approve(
+        "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+        utils.parseEther((amount * list.length).toString())
+      )
+      .then((result) => {
+        if (result)
+          distributorMethod
+            .multiSend(
+              "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+              list,
+              amount.toString()
+            )
+            .then(() => {
+              setTokens(tokens - amount * list.length);
+              setOpen(true);
+              setTimeout(() => {
+                setOpen(false);
+              }, 1500);
+            })
+            .catch(() => {
+              setOpen2(true);
+              setTimeout(() => {
+                setOpen2(false);
+              }, 1500);
+            });
+      });
+  };
   return (
     <Box
       sx={{
@@ -255,23 +305,63 @@ function Distribute(props) {
               lineHeight: "24px",
             }}
             onClick={() => {
-              csv
-                ? methods
-                    .multiSend(
-                      "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-                      list,
-                      amount.toString()
-                    )
-                    .then(() => {
-                      console.log("Done");
-                    })
-                : handleSubmit();
+              csv ? batchSend() : handleSubmit();
             }}
           >
             Send Reward
           </Button>
         </Box>
       </Box>
+      {open && (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 20,
+            background: "green",
+            color: "white",
+            width: "500px",
+            height: "100px",
+            position: "absolute",
+          }}
+        >
+          <Typography
+            sx={{
+              color: "white",
+              fontSize: "24px",
+              fontWeight: 700,
+            }}
+          >
+            Tokens have been Distributed!
+          </Typography>
+        </Box>
+      )}
+      {open2 && (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 20,
+            background: "red",
+            color: "white",
+            width: "500px",
+            height: "100px",
+            position: "absolute",
+          }}
+        >
+          <Typography
+            sx={{
+              color: "white",
+              fontSize: "24px",
+              fontWeight: 700,
+            }}
+          >
+            Transaction Failed
+          </Typography>
+        </Box>
+      )}
     </Box>
   );
 }

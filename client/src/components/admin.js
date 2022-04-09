@@ -1,13 +1,39 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import token from "../images/token.svg";
 import Input from "./input";
+import getEthers from "../getEthers";
+import { Contract, utils } from "ethers";
+import Token from "../contracts/Nestcoin.json";
 
 function Admin(props) {
-  const { methods, getBalance, address, setTokens, tokens } = props;
+  const { methods, setTokens, tokens } = props;
   const [amount, setAmount] = useState(0);
+  const [balance, setBalance] = useState(tokens);
+  const [open, setOpen] = useState(false);
+  const [open2, setOpen2] = useState(false);
+
+  useEffect(() => {
+    const getData = async () => {
+      const provider = await getEthers();
+      const signer = provider.getSigner();
+      const address = signer.getAddress();
+      const tokenContract = new Contract(
+        "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+        Token.abi,
+        provider
+      );
+
+      tokenContract.balanceOf(address).then((result) => {
+        console.log("Its updating");
+        setBalance(utils.formatEther(result));
+      });
+    };
+
+    getData().then(() => {});
+  }, [tokens]);
 
   return (
     <Box
@@ -30,9 +56,8 @@ function Admin(props) {
           fontWeight: 700,
           fontSize: "20px",
         }}
-        key={tokens}
       >
-        Token Balance: {tokens}
+        Token Balance: {balance}
       </Typography>
       <Box
         sx={{
@@ -77,15 +102,82 @@ function Admin(props) {
             lineHeight: "24px",
           }}
           onClick={() => {
-            methods.mint(amount.toString()).then(async () => {
-              const bal = (await getBalance(address)).toString();
-              setTokens(bal);
-            });
+            methods
+              .mint(amount.toString())
+              .then(() => {
+<<<<<<< HEAD
+                // setBalance(Number(balance) + amount);
+                setTokens(tokens + amount);
+=======
+                setBalance(Number(balance) + amount);
+                setTokens(Number(tokens) + amount);
+>>>>>>> 503b0671d91bede93271386fca6da409a78411d9
+                setOpen(true);
+                setTimeout(() => {
+                  setOpen(false);
+                }, 1500);
+              })
+              .catch(() => {
+                setOpen2(true);
+                setTimeout(() => {
+                  setOpen2(false);
+                }, 1500);
+              });
           }}
         >
           Mint
         </Button>
       </Box>
+      {open && (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 20,
+            background: "green",
+            color: "white",
+            width: "500px",
+            height: "100px",
+            position: "absolute",
+          }}
+        >
+          <Typography
+            sx={{
+              color: "white",
+              fontSize: "24px",
+              fontWeight: 700,
+            }}
+          >
+            Tokens Minted!
+          </Typography>
+        </Box>
+      )}
+      {open2 && (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 20,
+            background: "red",
+            color: "white",
+            width: "500px",
+            height: "100px",
+            position: "absolute",
+          }}
+        >
+          <Typography
+            sx={{
+              color: "white",
+              fontSize: "24px",
+              fontWeight: 700,
+            }}
+          >
+            Transaction Failed
+          </Typography>
+        </Box>
+      )}
     </Box>
   );
 }

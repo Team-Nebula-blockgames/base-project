@@ -3,7 +3,11 @@
 coverage
 coverage.json
 typechain
+.deps
 
 #Hardhat files
 cache
 artifacts
+
+#contracts
+flattenedContracts.sol
