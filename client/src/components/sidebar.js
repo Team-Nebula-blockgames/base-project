@@ -10,7 +10,7 @@ import { ReactComponent as System } from "../images/system.svg";
 import { ReactComponent as Stats } from "../images/stats.svg";
 
 function SideBar(props) {
-  const { setView } = props;
+  const { setView, checkAdmin } = props;
   return (
     <Box
       sx={{
@@ -37,9 +37,17 @@ function SideBar(props) {
       <SideBarItem
         text={"Customer"}
         icon={<DashBoard />}
-        onClick={() => setView("finduser")}
+        onClick={() => {
+          setView("finduser");
+        }}
       />
-      <SideBarItem text={"Tickets"} icon={<Tickets />} />
+      <SideBarItem
+        text={"Tickets"}
+        icon={<Tickets />}
+        onClick={() => {
+          if (!checkAdmin) setView("buytickets");
+        }}
+      />
       <SideBarItem text={"Orders"} icon={<Person />} />
       <SideBarItem text={"Movie Stats"} icon={<Stats />} />
       <Typography
@@ -57,18 +65,24 @@ function SideBar(props) {
       <SideBarItem
         text={"Admin"}
         icon={<Person />}
-        onClick={() => setView("admin")}
+        onClick={() => {
+          if (checkAdmin) setView("admin");
+        }}
       />
       <SideBarItem text={"Notification"} icon={<Bell />} />
       <SideBarItem
         text={"Reward"}
         icon={<Bell />}
-        onClick={() => setView("distribute")}
+        onClick={() => {
+          if (checkAdmin) setView("distribute");
+        }}
       />
       <SideBarItem
         text={"System Health"}
         icon={<System />}
-        onClick={() => setView("systemhealth")}
+        onClick={() => {
+          if (checkAdmin) setView("systemhealth");
+        }}
       />
     </Box>
   );

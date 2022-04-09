@@ -1,40 +1,49 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import token from "../images/token.svg";
-import Input from "./input";
-import getEthers from "../getEthers";
 import { Contract, utils } from "ethers";
 import Token from "../contracts/Nestcoin.json";
+import getEthers from "../getEthers";
 import formatBalance from "../utils/formatBalance";
 
-function Admin(props) {
-  const { methods, setTokens, tokens } = props;
-  const [amount, setAmount] = useState(0);
+function BuyTickets(props) {
+  const {
+    tokens,
+    setTokens,
+    ticketsBalance,
+    setTicketsBalance,
+    tokenMethod,
+    distributorMethod,
+    ticket_price,
+  } = props;
   const [balance, setBalance] = useState(tokens);
+  const [tickets, setTickets] = useState(ticketsBalance);
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
+  const [ticketPrice, setTicketPrice] = useState(ticket_price);
+  console.log("Hello");
 
   useEffect(() => {
     const getData = async () => {
       const provider = await getEthers();
       const signer = provider.getSigner();
       const address = signer.getAddress();
-      const tokenContract = new Contract(
-        process.env.REACT_APP_TOKEN_ADDRESS,
+      const distributorContract = new Contract(
+        process.env.REACT_APP_DISTRIBUTOR_ADDRESS,
         Token.abi,
         provider
       );
-
-      tokenContract.balanceOf(address).then((result) => {
-        console.log("Its updating");
-        setBalance(utils.formatEther(result));
-      });
+      const ticketBal = await distributorContract.ticket(address);
+      const price = await distributorContract.ticketPrice();
+      setTickets(ticketBal.toString());
+      setTicketPrice(utils.formatEther(price));
     };
 
-    getData().then(() => {});
-  }, [tokens]);
+    getData().then(() => {
+      console.log("Worked?");
+    });
+  }, []);
 
   return (
     <Box
@@ -49,6 +58,17 @@ function Admin(props) {
         position: "relative",
       }}
     >
+      <Typography
+        sx={{
+          position: "absolute",
+          top: "20px",
+          left: "20px",
+          fontWeight: 700,
+          fontSize: "20px",
+        }}
+      >
+        Tickets: {tickets}
+      </Typography>
       <Typography
         sx={{
           position: "absolute",
@@ -72,56 +92,72 @@ function Admin(props) {
           justifyContent: "center",
         }}
       >
-        <Box
+        <Typography
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "0px",
-            height: "115px",
-            width: "100%",
-            marginBottom: "32px",
-          }}
-        >
-          <Input
-            text={"Enter Amount"}
-            image={token}
-            file={false}
-            setAmount={setAmount}
-          />
-        </Box>
-        <Button
-          variant="contained"
-          sx={{
-            width: "209px",
-            height: "60px",
-            color: "white",
-            backgroundColor: "#1949D9",
             fontWeight: 700,
             fontSize: "20px",
             lineHeight: "24px",
+            color: "#000000",
+          }}
+        >
+          Buy Tickets
+        </Typography>
+        <Typography
+          sx={{
+            fontWeight: 700,
+            fontSize: "14px",
+            lineHeight: "17px",
+            color: "#000000",
+            opacity: 0.5,
+            marginBottom: "20px",
+          }}
+        >
+          One ticket is worth {ticketPrice} NCT
+        </Typography>
+        <Button
+          variant="contained"
+          sx={{
+            width: "120px",
+            height: "60px",
+            background: "#1949D9",
+            borderRadius: "8px",
+            color: "white",
+            fontWeight: 700,
+            fontSize: "20px",
+            lineHeight: "24px",
+            marginLeft: "15px",
+            marginTop: "20px",
           }}
           onClick={() => {
-            methods
-              .mint(amount.toString())
-              .then(() => {
-                setBalance(Number(balance) + amount);
-                setTokens(Number(tokens) + amount);
-                setOpen(true);
-                setTimeout(() => {
-                  setOpen(false);
-                }, 1500);
-              })
-              .catch(() => {
-                setOpen2(true);
-                setTimeout(() => {
-                  setOpen2(false);
-                }, 1500);
+            tokenMethod
+              .approve(
+                process.env.REACT_APP_DISTRIBUTOR_ADDRESS,
+                utils.parseEther("50")
+              )
+              .then((result) => {
+                if (result)
+                  distributorMethod
+                    .claimTicket(process.env.REACT_APP_TOKEN_ADDRESS)
+                    .then(() => {
+                      setTickets(Number(tickets) + 1);
+                      setTicketsBalance(Number(tickets) + 1);
+                      setTokens(tokens - ticketPrice);
+                      setBalance(balance - ticketPrice);
+                      setOpen(true);
+                      setTimeout(() => {
+                        setOpen(false);
+                      }, 1500);
+                    })
+                    .catch(() => {
+                      setOpen2(true);
+                      setTimeout(() => {
+                        setOpen2(false);
+                      }, 1500);
+                    });
               });
           }}
         >
-          Mint
+          Buy
         </Button>
       </Box>
       {open && (
@@ -145,7 +181,7 @@ function Admin(props) {
               fontWeight: 700,
             }}
           >
-            Tokens Minted!
+            You bought one Ticket!
           </Typography>
         </Box>
       )}
@@ -178,4 +214,4 @@ function Admin(props) {
   );
 }
 
-export default Admin;
+export default BuyTickets;

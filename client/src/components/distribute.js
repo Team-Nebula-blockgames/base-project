@@ -35,14 +35,14 @@ function Distribute(props) {
         const list = whitespaceFilter(data);
         tokenMethod
           .approve(
-            "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+            process.env.REACT_APP_DISTRIBUTOR_ADDRESS,
             utils.parseEther((amount * list.length).toString())
           )
           .then((result) => {
             if (result)
               distributorMethod
                 .multiSend(
-                  "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+                  process.env.REACT_APP_TOKEN_ADDRESS,
                   list,
                   amount.toString()
                 )
@@ -67,14 +67,14 @@ function Distribute(props) {
   const batchSend = async () => {
     tokenMethod
       .approve(
-        "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+        process.env.REACT_APP_DISTRIBUTOR_ADDRESS,
         utils.parseEther((amount * list.length).toString())
       )
       .then((result) => {
         if (result)
           distributorMethod
             .multiSend(
-              "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+              process.env.REACT_APP_TOKEN_ADDRESS,
               list,
               amount.toString()
             )
