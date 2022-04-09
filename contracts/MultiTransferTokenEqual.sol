@@ -47,7 +47,7 @@ contract MultiTransferTokenEqual is Ownable, Pausable {
     @notice Exchange NTC tokens for tickets
     @param _token Address of the NTC token
    */
-    function claimTicket(address _token) external {
+    function claimTicket(address _token) external whenNotPaused {
         INestcoin token = INestcoin(_token);
         require(
             token.balanceOf(msg.sender) >= ticketPrice,
