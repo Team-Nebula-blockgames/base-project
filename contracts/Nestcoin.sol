@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./AccessControl.sol";
 
-contract Nestcoin is ERC20, Ownable, AccessControl {
+contract Nestcoin is ERC20, AccessControl {
     constructor() ERC20("Nestcoin", "NTC") {}
 
     function mint(uint256 amount) public onlyRole(ADMIN) {
