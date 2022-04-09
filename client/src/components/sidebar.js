@@ -39,7 +39,11 @@ function SideBar(props) {
         icon={<DashBoard />}
         onClick={() => setView("finduser")}
       />
-      <SideBarItem text={"Tickets"} icon={<Tickets />} />
+      <SideBarItem
+        text={"Tickets"}
+        icon={<Tickets />}
+        onClick={() => setView("buytickets")}
+      />
       <SideBarItem text={"Orders"} icon={<Person />} />
       <SideBarItem text={"Movie Stats"} icon={<Stats />} />
       <Typography

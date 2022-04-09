@@ -21,7 +21,7 @@ function Admin(props) {
       const signer = provider.getSigner();
       const address = signer.getAddress();
       const tokenContract = new Contract(
-        "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+        process.env.REACT_APP_TOKEN_ADDRESS,
         Token.abi,
         provider
       );
