@@ -1,25 +1,46 @@
-# Advanced Sample Hardhat Project
+# Nestcoin Filmhouse Project
 
-This project demonstrates an advanced Hardhat use case, integrating other tools commonly used alongside Hardhat in the ecosystem.
+This project require the team to come up with a system to create a token, distribute the token and also transfer the token in batch.
 
-The project comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts. It also comes with a variety of other tools, preconfigured to work with the project code.
+The features implemented in the project are:
 
-N/B: When adding new contracts contract name and contract file name should be same.
+- Create the ERC 20 Token (Nestcoin) with an unlimited supply
+- Restrict minting of tokens to only admins.
+- Batch transfer the tokens should only be done by admins.
+- Exchange Nestcoin tokens for movie tickets.
+- Owner can pause and unpause token exchange for tickets and batch transfers of tokens.
+
+# Deployed artifacts
+
+- [Deployed UI](https://nebula-1.surge.sh/)
+- [Nestcoin contract on etherscan](https://rinkeby.etherscan.io/address/0xb0D079a5d2cbc51cD0e7B054Ce55B4f37F535678)
+- [MultiTransferTokenEqual on etherscan](https://rinkeby.etherscan.io/address/0xab513913C7Bf7C050E75BB62143a114f3AAF3f20)
+
+The project is divided into two, The contract and the client,
 
 # Client folder
 
-The client folder is the folder for the react frontend app calling the contracts. The client/contracts directory contains the compiled contracts for the react front end application.
+This contain the frontend code for the MVP, purely developed in ReactJs (A framework for developing user interface)
 
-# Steps
+# Contracts folder
+
+This contain the smart contracts for creating token, distributing token and also the admin priviledge, it was developed with Hardhat (A framework for solidity development)
+
+- Contracts present include.
+
+* AccessControl.sol : Managing the admin access
+* Nestcoin.sol : Creating the token
+* MultiTransferTokenEqual.sol : Manages toke distribution
+
+# Installation Guide
 
 - Create a .env file with the following variables
 
 1. CONTRACT_NAMES = names of the contract that should be copied to the react app directory seperated by commas.
-2. NODE_PROVIDER_URL = API link from node provider infura/alchemy etc.
-3. PRIVATE_KEY = your wallet private key for deploying to rinkeby testnet.
+2. NODE_PROVIDER_URL = API link from node provider infura/alchemy (For deployment to rinkeby testnet)
+3. PRIVATE_KEY = your wallet private key (For deploying to rinkeby testnet).
 
 - Run "npm install" (node version ^16 )
-
 - Try running some of the following tasks:
 
 ```shell
@@ -28,20 +49,4 @@ npm run deploy (to run deploy script on localhost)
 npm run compile (to complie contracts and copy contract ABI to the client/contracts folder )
 npm run deploy-rinkeby (to run deploy script on rinkeby testnet)
 npm run test (to run contract test)
-```
-
-# Etherscan verification
-
-To try out Etherscan verification, you first need to deploy a contract to an Ethereum network that's supported by Etherscan, such as Ropsten.
-
-In this project, copy the .env.example file to a file named .env, and then edit it to fill in the details. Enter your Etherscan API key, your Ropsten node URL (eg from Alchemy), and the private key of the account which will send the deployment transaction. With a valid .env file in place, first deploy your contract:
-
-```shell
-hardhat run --network ropsten scripts/deploy.js
-```
-
-Then, copy the deployment address and paste it in to replace `DEPLOYED_CONTRACT_ADDRESS` in this command:
-
-```shell
-npx hardhat verify --network ropsten DEPLOYED_CONTRACT_ADDRESS "Hello, Hardhat!"
 ```

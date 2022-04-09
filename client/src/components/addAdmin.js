@@ -166,7 +166,7 @@ function AddAdmin(props) {
                 });
             }}
           >
-            Removed Admin
+            Remove Admin
           </Button>
         </Box>
       </Box>
