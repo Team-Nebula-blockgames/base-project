@@ -3,7 +3,7 @@ const { expect, assert } = chai;
 chai.use(require("chai-as-promised"));
 const { ethers } = require("hardhat");
 
-describe("MultiTransferTokenEqual Contract", function () {
+describe("MultiTransferTokenEqual Contract 💢", function () {
   beforeEach(async () => {
     accounts = await ethers.getSigners();
     admin = accounts[0];
@@ -20,7 +20,7 @@ describe("MultiTransferTokenEqual Contract", function () {
     await multiTransferTokenEqualContract.deployed();
   });
 
-  it("Should deploy contract and set owner", async function () {
+  it("Should deploy contract and set owner👍", async function () {
     let nestCoinOwner = await nestCoinContract.owner();
     let multiTransferTokenEqualOwner =
       await multiTransferTokenEqualContract.owner();
@@ -34,8 +34,8 @@ describe("MultiTransferTokenEqual Contract", function () {
     ).equals(admin.address);
   });
 
-  it("Should allow owner perform batch token transfers", async function () {
-    let amount = 10;
+  it("Should allow owner perform batch token transfers👍", async function () {
+    let noOfTokenForBatchTransfer = 10;
     let mintedTokens = 100;
     let _addresses = [
       accounts[2].address,
@@ -49,38 +49,37 @@ describe("MultiTransferTokenEqual Contract", function () {
       ethers.utils.parseEther(String(mintedTokens))
     );
     let adminBalance = Number(await nestCoinContract.balanceOf(admin.address));
-    console.log("admin bal:", adminBalance);
-    console.log(
-      "expense: ",
-      Number(ethers.utils.parseEther(String(amount)) * _addresses.length)
-    );
+
     await multiTransferTokenEqualContract.multiSend(
       nestCoinContract.address,
       _addresses,
-      amount
+      noOfTokenForBatchTransfer
     );
 
     expect(
       Number(await nestCoinContract.balanceOf(admin.address))
     ).lessThanOrEqual(
       adminBalance -
-        Number(ethers.utils.parseEther(String(amount)) * _addresses.length)
+        Number(
+          ethers.utils.parseEther(String(noOfTokenForBatchTransfer)) *
+            _addresses.length
+        )
     );
 
     expect(Number(await nestCoinContract.balanceOf(_addresses[0]))).equals(
-      Number(ethers.utils.parseEther(String(amount)))
+      Number(ethers.utils.parseEther(String(noOfTokenForBatchTransfer)))
     );
 
     expect(Number(await nestCoinContract.balanceOf(_addresses[1]))).equals(
-      Number(ethers.utils.parseEther(String(amount)))
+      Number(ethers.utils.parseEther(String(noOfTokenForBatchTransfer)))
     );
 
     expect(Number(await nestCoinContract.balanceOf(_addresses[2]))).equals(
-      Number(ethers.utils.parseEther(String(amount)))
+      Number(ethers.utils.parseEther(String(noOfTokenForBatchTransfer)))
     );
   });
 
-  it("Should allow only admins perform batch token transfers.", async () => {
+  it("Should allow only admins perform batch token transfers.👍", async () => {
     let newAdmin = accounts[1];
     const ADMIN_HASH =
       "0xdf8b4c520ffe197c5343c6f5aec59570151ef9a492f2c624fd45ddde6135ec42"; //hash for role admin
