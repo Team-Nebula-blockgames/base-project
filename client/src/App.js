@@ -3,7 +3,6 @@ import getEthers from "./getEthers";
 import { Contract, utils } from "ethers";
 import Token from "./contracts/Nestcoin.json";
 import Distributor from "./contracts/MultiTransferTokenEqual.json";
-import Control from "./contracts/AccessControl.json";
 import "./App.css";
 import Box from "@mui/material/Box";
 import NavBar from "./components/navbar";
@@ -19,12 +18,11 @@ function App() {
   const [tokens, setTokens] = useState(0);
   const [distributorMethods, setDistributorMethods] = useState({});
   const [tokenMethods, setTokenMethods] = useState({});
-  const [controlMethods, setControlMethods] = useState({});
   const [view, setView] = useState("admin");
   const [tokenCheck, setTokenCheck] = useState();
   const [modal, setModal] = useState(false);
-  console.log(process.env);
-  console.log(process.env.REACT_APP_TOKEN_ADDRESS);
+  const [ticketsBalance, setTicketsBalance] = useState(0);
+  const [ticket_price, setTicket_price] = useState(0);
 
   useEffect(() => {
     const getData = async () => {
@@ -41,25 +39,16 @@ function App() {
         Distributor.abi,
         provider
       );
-      const controlContract = new Contract(
-        process.env.REACT_APP_CONTROL_ADDRESS,
-        Control.abi,
-        provider
-      );
       setDistributorMethods(distributorContract.connect(signer));
       setTokenMethods(tokenContract.connect(signer));
-      setControlMethods(controlContract.connect(signer));
       // getting the balance of tokens and setting it
       const tokenBalance = (await tokenContract.balanceOf(address)).toString();
       setTokenCheck(tokenContract);
       setTokens(utils.formatEther(tokenBalance));
-      // contract.on("Transfer", async (from, to, amount, event) => {
-      //   const bal = await provider.getBalance(address);
-      //   const balance = utils.formatEther(bal);
-      //   const tokenBalance = (await contract.balanceOf(address)).toString();
-      //   setBalance(tokenBalance);
-      //   setEthBalance(balance);
-      // });
+      const ticketBal = await distributorContract.ticket(address);
+      setTicketsBalance(ticketBal.toString());
+      const price = await distributorContract.ticketPrice();
+      setTicket_price(utils.formatEther(price));
     };
     getData().then(() => {});
   }, []);
@@ -86,9 +75,13 @@ function App() {
         {view === "systemhealth" && <SystemHealth methods={tokenMethods} />}
         {view === "buytickets" && (
           <BuyTickets
-            methods={tokenMethods}
             setTokens={setTokens}
             tokens={tokens}
+            tokenMethod={tokenMethods}
+            distributorMethod={distributorMethods}
+            ticketsBalance={ticketsBalance}
+            setTicketsBalance={setTicketsBalance}
+            ticket_price={ticket_price}
           />
         )}
       </Box>
