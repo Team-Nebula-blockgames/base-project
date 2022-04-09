@@ -13,6 +13,8 @@ import AddAdmin from "./components/addAdmin";
 import FindUser from "./components/findUser";
 import SystemHealth from "./components/systemHealth";
 import BuyTickets from "./components/buyTickets";
+import { Bars } from "react-loader-spinner";
+import "./styles/react-spinner-loader.css";
 
 function App() {
   const [tokens, setTokens] = useState(0);
@@ -23,12 +25,14 @@ function App() {
   const [modal, setModal] = useState(false);
   const [ticketsBalance, setTicketsBalance] = useState(0);
   const [ticket_price, setTicket_price] = useState(0);
+  const [admin, setAdmin] = useState(true);
+  const [resultloader, setResultloader] = useState(true);
 
   useEffect(() => {
     const getData = async () => {
       const provider = await getEthers();
       const signer = provider.getSigner();
-      const address = signer.getAddress();
+      const address = await signer.getAddress();
       const tokenContract = new Contract(
         process.env.REACT_APP_TOKEN_ADDRESS,
         Token.abi,
@@ -49,8 +53,13 @@ function App() {
       setTicketsBalance(ticketBal.toString());
       const price = await distributorContract.ticketPrice();
       setTicket_price(utils.formatEther(price));
+      const checkAdmin = await tokenContract.isAdmin(address);
+      checkAdmin ? setAdmin(true) : setAdmin(false);
+      checkAdmin ? setView("admin") : setView("buytickets");
     };
-    getData().then(() => {});
+    getData().then(() => {
+      setResultloader(false);
+    });
   }, []);
 
   return (
@@ -59,30 +68,53 @@ function App() {
         <NavBar setModal={setModal} />
       </Box>
       <Box sx={{ display: "flex" }}>
-        <SideBar setView={setView} />
-        {view === "distribute" && (
-          <Distribute
-            tokenMethod={tokenMethods}
-            distributorMethod={distributorMethods}
-            setTokens={setTokens}
-            tokens={tokens}
-          />
-        )}
-        {view === "admin" && (
-          <Admin methods={tokenMethods} setTokens={setTokens} tokens={tokens} />
-        )}
-        {view === "finduser" && <FindUser tokenCheck={tokenCheck} />}
-        {view === "systemhealth" && <SystemHealth methods={tokenMethods} />}
-        {view === "buytickets" && (
-          <BuyTickets
-            setTokens={setTokens}
-            tokens={tokens}
-            tokenMethod={tokenMethods}
-            distributorMethod={distributorMethods}
-            ticketsBalance={ticketsBalance}
-            setTicketsBalance={setTicketsBalance}
-            ticket_price={ticket_price}
-          />
+        <SideBar setView={setView} checkAdmin={admin} />
+        {resultloader ? (
+          <Box
+            sx={{
+              height: "calc(100vh - 130px)",
+              color: "black",
+              borderTop: "1px solid #C4C4C4",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexGrow: 1,
+              position: "relative",
+            }}
+          >
+            <Bars color="#1949D9" height={200} width={200} />
+          </Box>
+        ) : (
+          <Box sx={{ padding: 0, margin: 0, width: "100vw", height: "100vh" }}>
+            {view === "distribute" && (
+              <Distribute
+                tokenMethod={tokenMethods}
+                distributorMethod={distributorMethods}
+                setTokens={setTokens}
+                tokens={tokens}
+              />
+            )}
+            {view === "admin" && (
+              <Admin
+                methods={tokenMethods}
+                setTokens={setTokens}
+                tokens={tokens}
+              />
+            )}
+            {view === "finduser" && <FindUser tokenCheck={tokenCheck} />}
+            {view === "systemhealth" && <SystemHealth methods={tokenMethods} />}
+            {view === "buytickets" && (
+              <BuyTickets
+                setTokens={setTokens}
+                tokens={tokens}
+                tokenMethod={tokenMethods}
+                distributorMethod={distributorMethods}
+                ticketsBalance={ticketsBalance}
+                setTicketsBalance={setTicketsBalance}
+                ticket_price={ticket_price}
+              />
+            )}
+          </Box>
         )}
       </Box>
       {modal && <AddAdmin setModal={setModal} methods={tokenMethods} />}

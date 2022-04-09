@@ -7,6 +7,7 @@ import Input from "./input";
 import getEthers from "../getEthers";
 import { Contract, utils } from "ethers";
 import Token from "../contracts/Nestcoin.json";
+import formatBalance from "../utils/formatBalance";
 
 function Admin(props) {
   const { methods, setTokens, tokens } = props;
@@ -57,7 +58,7 @@ function Admin(props) {
           fontSize: "20px",
         }}
       >
-        Token Balance: {balance}
+        Token Balance: {formatBalance(balance)}
       </Typography>
       <Box
         sx={{

@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import { Contract, utils } from "ethers";
 import Token from "../contracts/Nestcoin.json";
 import getEthers from "../getEthers";
+import formatBalance from "../utils/formatBalance";
 
 function BuyTickets(props) {
   const {
@@ -77,7 +78,7 @@ function BuyTickets(props) {
           fontSize: "20px",
         }}
       >
-        Token Balance: {balance}
+        Token Balance: {formatBalance(balance)}
       </Typography>
       <Box
         sx={{
@@ -111,7 +112,7 @@ function BuyTickets(props) {
             marginBottom: "20px",
           }}
         >
-          One ticket is worth {ticketPrice ? "10" : "50"} NCT
+          One ticket is worth {ticketPrice} NCT
         </Typography>
         <Button
           variant="contained"
