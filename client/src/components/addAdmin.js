@@ -3,10 +3,13 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import scan from "../images/scan.svg";
+import cross from "../images/cross.png";
 
 function AddAdmin(props) {
-  const { tokenMethod, distributorMethod, setModal } = props;
+  const { methods, setModal } = props;
   const [address, setAddress] = useState("");
+  const [open, setOpen] = useState(false);
+  const [open2, setOpen2] = useState(false);
 
   return (
     <Box
@@ -38,6 +41,15 @@ function AddAdmin(props) {
           borderRadius: "3px",
         }}
       >
+        <div style={style.close__button}>
+          <div style={style.white}></div>
+          <img
+            src={cross}
+            alt="close-button"
+            onClick={() => setModal(false)}
+            style={{ width: "100%", height: "100%" }}
+          />
+        </div>
         <Box
           sx={{
             marginTop: "60px",
@@ -101,11 +113,27 @@ function AddAdmin(props) {
               lineHeight: "24px",
             }}
             onClick={async () => {
-              await tokenMethod.transferOwnership(address);
-              await distributorMethod.transferOwnership(address);
+              console.log(address);
+              await methods
+                .grantRole(
+                  "0xdf8b4c520ffe197c5343c6f5aec59570151ef9a492f2c624fd45ddde6135ec42",
+                  address
+                )
+                .then(() => {
+                  setOpen(true);
+                  setTimeout(() => {
+                    setOpen(false);
+                  }, 1500);
+                })
+                .catch(() => {
+                  setOpen2(true);
+                  setTimeout(() => {
+                    setOpen2(false);
+                  }, 1500);
+                });
             }}
           >
-            Change Admin
+            Add Admin
           </Button>
           <Button
             sx={{
@@ -119,12 +147,80 @@ function AddAdmin(props) {
               fontSize: "20px",
               lineHeight: "24px",
             }}
-            onClick={() => setModal(false)}
+            onClick={async () => {
+              methods
+                .removeRole(
+                  "0xdf8b4c520ffe197c5343c6f5aec59570151ef9a492f2c624fd45ddde6135ec42",
+                  address
+                )
+                .then(() => {
+                  setOpen(true);
+                  setTimeout(() => {
+                    setOpen(false);
+                  }, 1500);
+                })
+                .catch(() => {
+                  setOpen2(true);
+                  setTimeout(() => {
+                    setOpen2(false);
+                  }, 1500);
+                });
+            }}
           >
-            Discard
+            Remove Admin
           </Button>
         </Box>
       </Box>
+      {open && (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 20,
+            background: "green",
+            color: "white",
+            width: "500px",
+            height: "100px",
+            position: "absolute",
+          }}
+        >
+          <Typography
+            sx={{
+              color: "white",
+              fontSize: "24px",
+              fontWeight: 700,
+            }}
+          >
+            Succesful!
+          </Typography>
+        </Box>
+      )}
+      {open2 && (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 20,
+            background: "red",
+            color: "white",
+            width: "500px",
+            height: "100px",
+            position: "absolute",
+          }}
+        >
+          <Typography
+            sx={{
+              color: "white",
+              fontSize: "24px",
+              fontWeight: 700,
+            }}
+          >
+            Failed!
+          </Typography>
+        </Box>
+      )}
     </Box>
   );
 }
@@ -173,6 +269,25 @@ const style = {
     fontSize: "20px",
     lineHeight: "24px",
     color: "#938989",
+  },
+
+  close__button: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    left: "calc(100% - 16px)",
+    top: "-16px",
+    zIndex: 3,
+    width: "32px",
+    height: "32px",
+    cursor: "pointer",
+  },
+
+  white: {
+    backgroundColor: "white",
+    width: "40%",
+    height: "40%",
   },
 };
 
