@@ -14,7 +14,7 @@ The features implemented in the project are:
 
 - [Deployed UI](https://nebula-1.surge.sh/)
 - [Nestcoin contract on etherscan](https://rinkeby.etherscan.io/address/0x43F055963Ef46C1645308D5ADFfbD4EA04DE7772)
-- [MultiTransferTokenEqual on etherscan](https://rinkeby.etherscan.io/address/0xab513913C7Bf7C050E75BB62143a114f3AAF3f20)
+- [MultiTransferTokenEqual on etherscan](https://rinkeby.etherscan.io/address/0xed0Aa8C28Cf2c6DeAB01f02D0cf7AA5573C83904)
 
 The project is divided into two, The contract and the client,
 

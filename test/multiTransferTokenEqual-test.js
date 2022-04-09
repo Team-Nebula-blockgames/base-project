@@ -20,7 +20,7 @@ describe("MultiTransferTokenEqual Contract 💢", function () {
     await multiTransferTokenEqualContract.deployed();
   });
 
-  it("Should deploy contract and set owner👍", async function () {
+  it("Should deploy contract and set owner", async function () {
     let nestCoinOwner = await nestCoinContract.owner();
     let multiTransferTokenEqualOwner =
       await multiTransferTokenEqualContract.owner();
@@ -120,5 +120,67 @@ describe("MultiTransferTokenEqual Contract 💢", function () {
       newAdminBalance -
         Number(ethers.utils.parseEther(String(amount)) * _addresses.length)
     );
+  });
+
+  it("Should let user exchange token for tickets.", async () => {
+    let noOfTokenForBatchTransfer = 100;
+    let mintedTokens = 10000;
+    let _addresses = [
+      accounts[2].address,
+      accounts[3].address,
+      accounts[4].address,
+    ];
+    await nestCoinContract.mint(mintedTokens);
+    await nestCoinContract.approve(
+      multiTransferTokenEqualContract.address,
+      ethers.utils.parseEther(String(mintedTokens))
+    );
+    let txn = await multiTransferTokenEqualContract.multiSend(
+      nestCoinContract.address,
+      _addresses,
+      noOfTokenForBatchTransfer
+    );
+    txn.wait();
+    console.log("addres: ", accounts[3].address);
+    await nestCoinContract
+      .connect(accounts[3])
+      .approve(
+        multiTransferTokenEqualContract.address,
+        ethers.utils.parseEther(String(noOfTokenForBatchTransfer))
+      );
+    let customerInitialTokenBalance = await nestCoinContract.balanceOf(
+      accounts[3].address
+    );
+
+    await multiTransferTokenEqualContract
+      .connect(accounts[3])
+      .claimTicket(nestCoinContract.address);
+
+    let customerTicketCount = await multiTransferTokenEqualContract
+      .connect(accounts[3])
+      .ticket(accounts[3]);
+    let customerFinalTokenBalance = await nestCoinContract.balanceOf(
+      accounts[3].address
+    );
+    let ticketPrice = await nestCoinContract.ticketPrice();
+
+    expect(customerTicketCount).equals(1);
+    expect(customerInitialTokenBalance - ticketPrice).equals(
+      customerFinalTokenBalance
+    );
+  });
+
+  it("Should allow only owner to pause contract", async () => {
+    await multiTransferTokenEqualContract.pause();
+    let isPaused = await multiTransferTokenEqualContract.paused();
+    expect(isPaused).equal(true);
+  });
+
+  it("Should allow only owner to unpause contract", async () => {
+    await multiTransferTokenEqualContract.pause();
+    await multiTransferTokenEqualContract.unpause();
+    let isPaused = await multiTransferTokenEqualContract.paused();
+
+    expect(isPaused).equal(false);
   });
 });
