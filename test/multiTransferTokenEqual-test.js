@@ -36,7 +36,7 @@ describe("MultiTransferTokenEqual Contract", function () {
 
   it("Should allow owner perform batch token transfers", async function () {
     let amount = 10;
-    let mintedTokens = 1000000;
+    let mintedTokens = 100;
     let _addresses = [
       accounts[2].address,
       accounts[3].address,
@@ -50,15 +50,19 @@ describe("MultiTransferTokenEqual Contract", function () {
     );
     let adminBalance = Number(await nestCoinContract.balanceOf(admin.address));
     console.log("admin bal:", adminBalance);
+    console.log(
+      "expense: ",
+      Number(ethers.utils.parseEther(String(amount)) * _addresses.length)
+    );
     await multiTransferTokenEqualContract.multiSend(
       nestCoinContract.address,
       _addresses,
       amount
     );
-    adminBalance = Number(await nestCoinContract.balanceOf(admin.address));
-    console.log("admin bal:", adminBalance);
 
-    expect(Number(await nestCoinContract.balanceOf(admin.address))).equals(
+    expect(
+      Number(await nestCoinContract.balanceOf(admin.address))
+    ).lessThanOrEqual(
       adminBalance -
         Number(ethers.utils.parseEther(String(amount)) * _addresses.length)
     );

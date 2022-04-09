@@ -9,12 +9,15 @@ import "./INestcoin.sol";
 /// @notice Transfer equal tokens amount to multiple addresses
 contract MultiTransferTokenEqual is Ownable, Pausable {
     using SafeERC20 for INestcoin;
-    event Recieved(address _sender, uint256 _amount);
-    event WithdrawEther(address _reciever, uint256 _amount);
+
+    event BatchTransfer(uint256 batchSize, uint256 amount);
+
+    mapping(address => uint256) public ticket;
+    uint256 public ticketPrice = 50 * 10**18; //50 NTC Tokens per ticket
 
     /** 
     @notice Send equal ERC20 tokens amount to multiple addresses
-    @param _token The token to send
+    @param _token Address of the NTC token
     @param _addresses Array of addresses to send to
     @param _amount Tokens amount to send to each address
    */
@@ -31,37 +34,40 @@ contract MultiTransferTokenEqual is Ownable, Pausable {
 
         require(
             token.balanceOf(msg.sender) >= _amountSum,
-            "Insufficient token balance"
+            "Insufficient token balance."
         );
         token.safeTransferFrom(msg.sender, address(this), _amountSum);
         for (uint8 i; i < _addresses.length; i++) {
             token.safeTransfer(_addresses[i], _amount * 10**18);
         }
+        emit BatchTransfer(_addresses.length, _amount);
     }
 
-    receive() external payable {
-        emit Recieved(msg.sender, msg.value);
-    }
-
-    /// @dev Notice callers if functions that do not exist are called
-    fallback() external payable {
-        require(msg.data.length == 0);
-    }
-
-    /// @notice Withdraw all ETH from contract to owners address.
-    function withdrawEther() external payable onlyOwner {
-        (bool sent, ) = payable(msg.sender).call{value: address(this).balance}(
-            ""
+    /** 
+    @notice Exchange NTC tokens for tickets
+    @param _token Address of the NTC token
+   */
+    function claimTicket(address _token) external {
+        INestcoin token = INestcoin(_token);
+        require(
+            token.balanceOf(msg.sender) >= ticketPrice,
+            "Insufficient token balance."
         );
-        require(sent, "Failed to send Ether");
-        emit WithdrawEther(msg.sender, address(this).balance);
+        require(!token.isAdmin(msg.sender), "Admins cannot claim tickets.");
+        token.safeTransferFrom(msg.sender, owner(), ticketPrice);
+        ticket[msg.sender]++;
     }
 
-    /// @dev Emergency stop contract in a case of a critical security flaw.
+    /**
+     * @notice Emergency stop contract in a case of a critical security flaw.
+     */
     function pause() public onlyOwner {
         _pause();
     }
 
+    /**
+     * @notice Switch to allow batch transfer of tokens.
+     */
     function unpause() public onlyOwner {
         _unpause();
     }
