@@ -24,29 +24,40 @@ This contain the frontend code for the MVP, purely developed in ReactJs (A frame
 
 # Contracts folder
 
-This contain the smart contracts for creating token, distributing token and also the admin priviledge, it was developed with Hardhat (A framework for solidity development)
+This contains the smart contracts for creating token, distributing token and also the admin priviledge, it was developed with Hardhat (A framework for solidity development)
 
-- Contracts present include.
+#### Contracts present include.
 
-* AccessControl.sol : Managing the admin access
-* Nestcoin.sol : Creating the token
-* MultiTransferTokenEqual.sol : Manages toke distribution
+- AccessControl.sol : Managing the admin access
+- Nestcoin.sol : Creating the token
+- MultiTransferTokenEqual.sol : Manages toke distribution
 
 # Installation Guide
 
-- Create a .env file with the following variables
+#### N/B: you'll need node version ^16 to run the project
+
+Create a .env file with the following variables
 
 1. CONTRACT_NAMES = names of the contract that should be copied to the react app directory seperated by commas.
 2. NODE_PROVIDER_URL = API link from node provider infura/alchemy (For deployment to rinkeby testnet)
 3. PRIVATE_KEY = your wallet private key (For deploying to rinkeby testnet).
 
-- Run "npm install" (node version ^16 )
-- Try running some of the following tasks:
+- Try running some of the following tasks for :
 
 ```shell
-npm run node (to start localhost testnet)
-npm run deploy (to run deploy script on localhost)
+npm install
+npm run node (to start local blockchain)
 npm run compile (to complie contracts and copy contract ABI to the client/contracts folder )
-npm run deploy-rinkeby (to run deploy script on rinkeby testnet)
 npm run test (to run contract test)
+npm run deploy (to run deploy script on localhost)
+npm run deploy-rinkeby (to run deploy script on rinkeby testnet)
+
+```
+
+- To run the client
+
+```shell
+cd client
+npm start
+
 ```
